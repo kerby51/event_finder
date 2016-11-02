@@ -21451,11 +21451,23 @@
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _EventFinderByKeywords = __webpack_require__(178);
+	var _reactCookie = __webpack_require__(178);
+	
+	var _reactCookie2 = _interopRequireDefault(_reactCookie);
+	
+	var _UserForm = __webpack_require__(180);
+	
+	var _UserForm2 = _interopRequireDefault(_UserForm);
+	
+	var _Login = __webpack_require__(181);
+	
+	var _Login2 = _interopRequireDefault(_Login);
+	
+	var _EventFinderByKeywords = __webpack_require__(185);
 	
 	var _EventFinderByKeywords2 = _interopRequireDefault(_EventFinderByKeywords);
 	
-	var _EventFinderByLocation = __webpack_require__(201);
+	var _EventFinderByLocation = __webpack_require__(210);
 	
 	var _EventFinderByLocation2 = _interopRequireDefault(_EventFinderByLocation);
 	
@@ -21473,33 +21485,134 @@
 	  function App(props) {
 	    _classCallCheck(this, App);
 	
-	    return _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	    var _this = _possibleConstructorReturn(this, (App.__proto__ || Object.getPrototypeOf(App)).call(this, props));
+	
+	    _this.state = {
+	      events: []
+	    };
+	    _this.logIn = _this.logIn.bind(_this);
+	    _this.signUp = _this.signUp.bind(_this);
+	    _this.signOut = _this.signOut.bind(_this);
+	    // this.sendEvent = this.sendEvent.bind(this);
+	    return _this;
 	  }
 	
-	  // handleChange (e) {
-	  //   e.preventDefault();
-	  //   const target = e.target.value;
-	  //   const newTarget = target.split(' ').join('%20');
-	  //   console.log(newTarget);
-	  //   this.setState({
-	  //     keyword: newTarget,
-	  //   });
-	  //   this.getEvents();
-	  // }
-	
-	  // handleSubmit (e) {
-	  //   e.preventDefault();
-	  //   this.getEvents();
-	  // }
-	
 	  _createClass(App, [{
+	    key: 'componentDidMount',
+	    value: function componentDidMount() {
+	      this.updateAuth();
+	      // if (cookie.load('token')) {
+	      //   console.log('hello');
+	      // }
+	    }
+	
+	    // getCurrentUserEvents() {
+	    //   request.get('/api/events')
+	    //          .then((response) => {
+	    //            const events = response.body;
+	    //            this.setState({ events });
+	    //          })
+	    //          .catch(() => {
+	    //            this.updateAuth();
+	    //          });
+	    // }
+	
+	    // sendEvent({ title, kajsdf, akjdsf, kjad, kjasdf, kajdsf }) {
+	    //   request.post('/api/events')
+	    //          .send({ title, date, name, etc. etc,  })
+	    //          .then(() => {
+	    //            this.getCurrentUserEvents();
+	    //          });
+	    // }
+	
+	  }, {
+	    key: 'signOut',
+	    value: function signOut() {
+	      var _this2 = this;
+	
+	      _superagent2.default.post('/api/signout').then(function () {
+	        return _this2.updateAuth();
+	      });
+	    }
+	  }, {
+	    key: 'updateAuth',
+	    value: function updateAuth() {
+	      this.setState({
+	        token: _reactCookie2.default.load('token')
+	      });
+	    }
+	  }, {
+	    key: 'logIn',
+	    value: function logIn(userDetails) {
+	      var _this3 = this;
+	
+	      _superagent2.default.post('/api/login').send(userDetails).then(function () {
+	        _this3.updateAuth();
+	        // this.getCurrentUserEvents();
+	      });
+	    }
+	  }, {
+	    key: 'signUp',
+	    value: function signUp(userDetails) {
+	      var _this4 = this;
+	
+	      _superagent2.default.post('/api/signup').send(userDetails).then(function () {
+	        _this4.updateAuth();
+	        // this.getCurrentUserEvents();
+	      });
+	    }
+	  }, {
 	    key: 'render',
 	    value: function render() {
+	      var userDisplayElement = void 0;
+	      if (this.state.token) {
+	        userDisplayElement = _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.signOut },
+	            'Log-Out!'
+	          )
+	        );
+	      } else {
+	        userDisplayElement = _react2.default.createElement(
+	          'div',
+	          null,
+	          _react2.default.createElement(
+	            'nav',
+	            null,
+	            _react2.default.createElement(_Login2.default, { signUp: this.signUp, logIn: this.logIn })
+	          )
+	        );
+	      }
 	      return _react2.default.createElement(
 	        'div',
-	        { id: 'search-bars' },
-	        _react2.default.createElement(_EventFinderByKeywords2.default, null),
-	        _react2.default.createElement(_EventFinderByLocation2.default, null)
+	        null,
+	        userDisplayElement,
+	        _react2.default.createElement(
+	          'div',
+	          { id: 'search-bars' },
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'keyword-search-bar' },
+	            _react2.default.createElement(_EventFinderByKeywords2.default, null)
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            null,
+	            _react2.default.createElement(
+	              'h3',
+	              null,
+	              ' -OR- '
+	            )
+	          ),
+	          _react2.default.createElement(
+	            'div',
+	            { id: 'location-search-bar' },
+	            _react2.default.createElement(_EventFinderByLocation2.default, null)
+	          )
+	        )
 	      );
 	    }
 	  }]);
@@ -23099,6 +23212,737 @@
 /* 178 */
 /***/ function(module, exports, __webpack_require__) {
 
+	var cookie = __webpack_require__(179);
+	
+	if (typeof Object.assign != 'function') {
+	  Object.assign = function(target) {
+	    'use strict';
+	    if (target == null) {
+	      throw new TypeError('Cannot convert undefined or null to object');
+	    }
+	
+	    target = Object(target);
+	    for (var index = 1; index < arguments.length; index++) {
+	      var source = arguments[index];
+	      if (source != null) {
+	        for (var key in source) {
+	          if (Object.prototype.hasOwnProperty.call(source, key)) {
+	            target[key] = source[key];
+	          }
+	        }
+	      }
+	    }
+	    return target;
+	  };
+	}
+	
+	var _rawCookie = {};
+	var _res = undefined;
+	
+	function _isResWritable() {
+	  if(!_res)
+	    return false
+	  if(_res.headersSent === true)
+	    return false
+	  return true
+	}
+	
+	function load(name, doNotParse) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  var cookieVal = cookies && cookies[name];
+	
+	  if (!doNotParse) {
+	    try {
+	      cookieVal = JSON.parse(cookieVal);
+	    } catch(e) {
+	      // Not serialized object
+	    }
+	  }
+	
+	  return cookieVal;
+	}
+	
+	function select(regex) {
+	  var cookies = (typeof document === 'undefined') ? _rawCookie : cookie.parse(document.cookie);
+	  if(!cookies)
+	    return {}
+	  if(!regex)
+	    return cookies
+	  return Object.keys(cookies)
+	    .reduce(function(accumulator, name) {
+	      if(!regex.test(name))
+	        return accumulator
+	      var newCookie = {}
+	      newCookie[name] = cookies[name]
+	      return Object.assign({}, accumulator, newCookie)
+	    }, {})
+	}
+	
+	function save(name, val, opt) {
+	  _rawCookie[name] = val;
+	
+	  // allow you to work with cookies as objects.
+	  if (typeof val === 'object') {
+	    _rawCookie[name] = JSON.stringify(val);
+	  }
+	
+	  // Cookies only work in the browser
+	  if (typeof document !== 'undefined') {
+	    document.cookie = cookie.serialize(name, _rawCookie[name], opt);
+	  }
+	
+	  if (_isResWritable() && _res.cookie) {
+	    _res.cookie(name, val, opt);
+	  }
+	}
+	
+	function remove(name, opt) {
+	  delete _rawCookie[name];
+	
+	  if (typeof opt === 'undefined') {
+	    opt = {};
+	  } else if (typeof opt === 'string') {
+	    // Will be deprecated in future versions
+	    opt = { path: opt };
+	  } else {
+	    // Prevent mutation of opt below
+	    opt = Object.assign({}, opt);
+	  }
+	
+	  if (typeof document !== 'undefined') {
+	    opt.expires = new Date(1970, 1, 1, 0, 0, 1);
+	    document.cookie = cookie.serialize(name, '', opt);
+	  }
+	
+	  if (_isResWritable() && _res.clearCookie) {
+	    _res.clearCookie(name, opt);
+	  }
+	}
+	
+	function setRawCookie(rawCookie) {
+	  if (rawCookie) {
+	    _rawCookie = cookie.parse(rawCookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	}
+	
+	function plugToRequest(req, res) {
+	  if (req.cookie) {
+	    _rawCookie = req.cookie;
+	  } else if (req.cookies) {
+	    _rawCookie = req.cookies;
+	  } else if (req.headers && req.headers.cookie) {
+	    setRawCookie(req.headers.cookie);
+	  } else {
+	    _rawCookie = {};
+	  }
+	
+	  _res = res;
+	  return function unplug() {
+	    _res = null;
+	    _rawCookie = {};
+	  }
+	}
+	
+	var reactCookie = {
+	  load: load,
+	  select: select,
+	  save: save,
+	  remove: remove,
+	  setRawCookie: setRawCookie,
+	  plugToRequest: plugToRequest
+	};
+	
+	if (typeof window !== 'undefined') {
+	  window['reactCookie'] = reactCookie;
+	}
+	
+	module.exports = reactCookie;
+
+
+/***/ },
+/* 179 */
+/***/ function(module, exports) {
+
+	/*!
+	 * cookie
+	 * Copyright(c) 2012-2014 Roman Shtylman
+	 * Copyright(c) 2015 Douglas Christopher Wilson
+	 * MIT Licensed
+	 */
+	
+	/**
+	 * Module exports.
+	 * @public
+	 */
+	
+	exports.parse = parse;
+	exports.serialize = serialize;
+	
+	/**
+	 * Module variables.
+	 * @private
+	 */
+	
+	var decode = decodeURIComponent;
+	var encode = encodeURIComponent;
+	
+	/**
+	 * RegExp to match field-content in RFC 7230 sec 3.2
+	 *
+	 * field-content = field-vchar [ 1*( SP / HTAB ) field-vchar ]
+	 * field-vchar   = VCHAR / obs-text
+	 * obs-text      = %x80-FF
+	 */
+	
+	var fieldContentRegExp = /^[\u0009\u0020-\u007e\u0080-\u00ff]+$/;
+	
+	/**
+	 * Parse a cookie header.
+	 *
+	 * Parse the given cookie header string into an object
+	 * The object has the various cookies as keys(names) => values
+	 *
+	 * @param {string} str
+	 * @param {object} [options]
+	 * @return {object}
+	 * @public
+	 */
+	
+	function parse(str, options) {
+	  if (typeof str !== 'string') {
+	    throw new TypeError('argument str must be a string');
+	  }
+	
+	  var obj = {}
+	  var opt = options || {};
+	  var pairs = str.split(/; */);
+	  var dec = opt.decode || decode;
+	
+	  pairs.forEach(function(pair) {
+	    var eq_idx = pair.indexOf('=')
+	
+	    // skip things that don't look like key=value
+	    if (eq_idx < 0) {
+	      return;
+	    }
+	
+	    var key = pair.substr(0, eq_idx).trim()
+	    var val = pair.substr(++eq_idx, pair.length).trim();
+	
+	    // quoted values
+	    if ('"' == val[0]) {
+	      val = val.slice(1, -1);
+	    }
+	
+	    // only assign once
+	    if (undefined == obj[key]) {
+	      obj[key] = tryDecode(val, dec);
+	    }
+	  });
+	
+	  return obj;
+	}
+	
+	/**
+	 * Serialize data into a cookie header.
+	 *
+	 * Serialize the a name value pair into a cookie string suitable for
+	 * http headers. An optional options object specified cookie parameters.
+	 *
+	 * serialize('foo', 'bar', { httpOnly: true })
+	 *   => "foo=bar; httpOnly"
+	 *
+	 * @param {string} name
+	 * @param {string} val
+	 * @param {object} [options]
+	 * @return {string}
+	 * @public
+	 */
+	
+	function serialize(name, val, options) {
+	  var opt = options || {};
+	  var enc = opt.encode || encode;
+	
+	  if (!fieldContentRegExp.test(name)) {
+	    throw new TypeError('argument name is invalid');
+	  }
+	
+	  var value = enc(val);
+	
+	  if (value && !fieldContentRegExp.test(value)) {
+	    throw new TypeError('argument val is invalid');
+	  }
+	
+	  var pairs = [name + '=' + value];
+	
+	  if (null != opt.maxAge) {
+	    var maxAge = opt.maxAge - 0;
+	    if (isNaN(maxAge)) throw new Error('maxAge should be a Number');
+	    pairs.push('Max-Age=' + maxAge);
+	  }
+	
+	  if (opt.domain) {
+	    if (!fieldContentRegExp.test(opt.domain)) {
+	      throw new TypeError('option domain is invalid');
+	    }
+	
+	    pairs.push('Domain=' + opt.domain);
+	  }
+	
+	  if (opt.path) {
+	    if (!fieldContentRegExp.test(opt.path)) {
+	      throw new TypeError('option path is invalid');
+	    }
+	
+	    pairs.push('Path=' + opt.path);
+	  }
+	
+	  if (opt.expires) pairs.push('Expires=' + opt.expires.toUTCString());
+	  if (opt.httpOnly) pairs.push('HttpOnly');
+	  if (opt.secure) pairs.push('Secure');
+	
+	  return pairs.join('; ');
+	}
+	
+	/**
+	 * Try decoding a string using a decoding function.
+	 *
+	 * @param {string} str
+	 * @param {function} decode
+	 * @private
+	 */
+	
+	function tryDecode(str, decode) {
+	  try {
+	    return decode(str);
+	  } catch (e) {
+	    return str;
+	  }
+	}
+
+
+/***/ },
+/* 180 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  logIn: _react2.default.PropTypes.func,
+	  signUp: _react2.default.PropTypes.func,
+	  buttonText: _react2.default.PropTypes.string,
+	  closeModal: _react2.default.PropTypes.func
+	};
+	
+	var UserForm = function (_React$Component) {
+	  _inherits(UserForm, _React$Component);
+	
+	  function UserForm(props) {
+	    _classCallCheck(this, UserForm);
+	
+	    var _this = _possibleConstructorReturn(this, (UserForm.__proto__ || Object.getPrototypeOf(UserForm)).call(this, props));
+	
+	    _this.state = {
+	      email: '',
+	      password: '',
+	      invalidData: true
+	    };
+	    _this.handleInputChange = _this.handleInputChange.bind(_this);
+	    _this.handleSubmit = _this.handleSubmit.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(UserForm, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      nextState.invalidData = !(nextState.email && nextState.password);
+	    }
+	  }, {
+	    key: 'handleInputChange',
+	    value: function handleInputChange(e) {
+	      var target = e.target;
+	      var name = target.getAttribute('name');
+	      var value = target.value;
+	      var updated = {};
+	      updated[name] = value;
+	      this.setState(updated);
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      if (this.props.buttonText == "Register") {
+	        this.props.signUp(this.state);
+	      } else {
+	        this.props.logIn(this.state);
+	      }
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'a',
+	          { id: 'close-x', href: '#', onClick: this.props.closeModal },
+	          'x'
+	        ),
+	        _react2.default.createElement(
+	          'form',
+	          { className: 'login-form', onSubmit: this.handleSubmit },
+	          _react2.default.createElement('input', {
+	            className: 'email_inputs',
+	            type: 'text',
+	            name: 'email',
+	            value: this.state.email,
+	            placeholder: 'email',
+	            onChange: this.handleInputChange
+	          }),
+	          _react2.default.createElement('input', {
+	            className: 'email_inputs',
+	            type: 'password',
+	            name: 'password',
+	            value: this.state.password,
+	            placeholder: 'password',
+	            onChange: this.handleInputChange
+	          }),
+	          _react2.default.createElement('input', { className: 'sign-in-buttons', disabled: this.state.invalidData, value: this.props.buttonText })
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return UserForm;
+	}(_react2.default.Component);
+	
+	UserForm.propTypes = propTypes;
+	
+	exports.default = UserForm;
+	
+	// id="submit_button" type="submit" value="SUBMIT"
+
+/***/ },
+/* 181 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _RegisterView = __webpack_require__(182);
+	
+	var _RegisterView2 = _interopRequireDefault(_RegisterView);
+	
+	var _LoginLink = __webpack_require__(184);
+	
+	var _LoginLink2 = _interopRequireDefault(_LoginLink);
+	
+	var _LoginLinkModal = __webpack_require__(183);
+	
+	var _LoginLinkModal2 = _interopRequireDefault(_LoginLinkModal);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  logIn: _react2.default.PropTypes.func,
+	  signUp: _react2.default.PropTypes.func
+	};
+	
+	var Login = function (_React$Component) {
+	  _inherits(Login, _React$Component);
+	
+	  function Login(props) {
+	    _classCallCheck(this, Login);
+	
+	    var _this = _possibleConstructorReturn(this, (Login.__proto__ || Object.getPrototypeOf(Login)).call(this, props));
+	
+	    _this.state = {
+	      modalOpen: false,
+	      buttonText: ''
+	    };
+	    _this.openModalLogin = _this.openModalLogin.bind(_this);
+	    _this.openModalSignup = _this.openModalSignup.bind(_this);
+	    _this.closeModal = _this.closeModal.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Login, [{
+	    key: 'openModalLogin',
+	    value: function openModalLogin() {
+	      this.setState({
+	        modalOpen: true,
+	        buttonText: 'Log-In'
+	      });
+	    }
+	  }, {
+	    key: 'openModalSignup',
+	    value: function openModalSignup() {
+	      this.setState({
+	        modalOpen: true,
+	        buttonText: 'Register'
+	      });
+	    }
+	  }, {
+	    key: 'closeModal',
+	    value: function closeModal() {
+	      this.setState({
+	        modalOpen: false,
+	        buttonText: 'Log-In'
+	      });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(_LoginLink2.default, {
+	          openModal: this.openModalLogin
+	        }),
+	        _react2.default.createElement(_RegisterView2.default, {
+	          openModal: this.openModalSignup
+	        }),
+	        this.state.modalOpen ? _react2.default.createElement(_LoginLinkModal2.default, {
+	          closeModal: this.closeModal,
+	          logIn: this.props.logIn,
+	          signUp: this.props.signUp,
+	          buttonText: this.state.buttonText
+	        }) : false
+	      );
+	    }
+	  }]);
+	
+	  return Login;
+	}(_react2.default.Component);
+	
+	Login.propTypes = propTypes;
+	
+	exports.default = Login;
+
+/***/ },
+/* 182 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _LoginLinkModal = __webpack_require__(183);
+	
+	var _LoginLinkModal2 = _interopRequireDefault(_LoginLinkModal);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  openModal: _react2.default.PropTypes.func
+	};
+	
+	var RegisterView = function (_React$Component) {
+	  _inherits(RegisterView, _React$Component);
+	
+	  function RegisterView() {
+	    _classCallCheck(this, RegisterView);
+	
+	    return _possibleConstructorReturn(this, (RegisterView.__proto__ || Object.getPrototypeOf(RegisterView)).apply(this, arguments));
+	  }
+	
+	  _createClass(RegisterView, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'register-link' },
+	        _react2.default.createElement(
+	          'button',
+	          {
+	            className: 'register',
+	            onClick: this.props.openModal
+	          },
+	          'Register'
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return RegisterView;
+	}(_react2.default.Component);
+	
+	;
+	
+	RegisterView.propTypes = propTypes;
+	
+	exports.default = RegisterView;
+
+/***/ },
+/* 183 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _UserForm = __webpack_require__(180);
+	
+	var _UserForm2 = _interopRequireDefault(_UserForm);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	var propTypes = {
+	  closeModal: _react2.default.PropTypes.func,
+	  logIn: _react2.default.PropTypes.func,
+	  signUp: _react2.default.PropTypes.func,
+	  buttonText: _react2.default.PropTypes.string.isRequired
+	};
+	
+	var LoginLinkModal = function LoginLinkModal(_ref) {
+	  var closeModal = _ref.closeModal,
+	      logIn = _ref.logIn,
+	      signUp = _ref.signUp,
+	      buttonText = _ref.buttonText;
+	
+	  return _react2.default.createElement(
+	    'div',
+	    null,
+	    _react2.default.createElement(
+	      'div',
+	      { id: 'login-modal' },
+	      _react2.default.createElement(
+	        'div',
+	        { id: 'show-login' },
+	        _react2.default.createElement(_UserForm2.default, { closeModal: closeModal, logIn: logIn, signUp: signUp, buttonText: buttonText })
+	      )
+	    )
+	  );
+	};
+	
+	LoginLinkModal.propTypes = propTypes;
+	
+	exports.default = LoginLinkModal;
+
+/***/ },
+/* 184 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _LoginLinkModal = __webpack_require__(183);
+	
+	var _LoginLinkModal2 = _interopRequireDefault(_LoginLinkModal);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  openModal: _react2.default.PropTypes.func
+	};
+	
+	var LoginLink = function (_React$Component) {
+	  _inherits(LoginLink, _React$Component);
+	
+	  function LoginLink() {
+	    _classCallCheck(this, LoginLink);
+	
+	    return _possibleConstructorReturn(this, (LoginLink.__proto__ || Object.getPrototypeOf(LoginLink)).apply(this, arguments));
+	  }
+	
+	  _createClass(LoginLink, [{
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        { className: 'login-link' },
+	        _react2.default.createElement(
+	          'a',
+	          { href: '#', onClick: this.props.openModal, className: 'login' },
+	          'Login'
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return LoginLink;
+	}(_react2.default.Component);
+	
+	;
+	
+	LoginLink.propTypes = propTypes;
+	
+	exports.default = LoginLink;
+
+/***/ },
+/* 185 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 	
 	Object.defineProperty(exports, "__esModule", {
@@ -23115,17 +23959,21 @@
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _reactModal = __webpack_require__(179);
+	var _reactModal = __webpack_require__(186);
 	
 	var _reactModal2 = _interopRequireDefault(_reactModal);
 	
-	var _dateformat = __webpack_require__(199);
+	var _dateformat = __webpack_require__(206);
 	
 	var _dateformat2 = _interopRequireDefault(_dateformat);
 	
-	var _EventView = __webpack_require__(200);
+	var _EventView = __webpack_require__(207);
 	
 	var _EventView2 = _interopRequireDefault(_EventView);
+	
+	var _Spotify = __webpack_require__(208);
+	
+	var _Spotify2 = _interopRequireDefault(_Spotify);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -23145,63 +23993,67 @@
 	
 	    _this.state = {
 	      keyword: '',
-	      events: [],
-	      keywordModalOpen: false
+	      keywordEvents: [],
+	      keywordModalOpen: false,
+	      invalidData: true
 	    };
 	    _this.getEvents = _this.getEvents.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.openKeywordModal = _this.openKeywordModal.bind(_this);
 	    _this.closeKeywordModal = _this.closeKeywordModal.bind(_this);
-	    // this.afterOpenKeywordModal = this.afterOpenKeywordModal.bind(this);
 	    return _this;
 	  }
 	
 	  _createClass(EventFinderByKeywords, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      nextState.invalidData = !nextState.keyword;
+	    }
+	  }, {
 	    key: 'getEvents',
 	    value: function getEvents() {
 	      var _this2 = this;
 	
-	      var eventList = [];
-	      fetch('/api/events/' + this.state.keyword).then(function (response) {
+	      var searchInput = this.state.keyword;
+	      var cleanSearchInput = searchInput.replace(' ', '%20');
+	      fetch('/api/keyword-events/' + cleanSearchInput).then(function (response) {
 	        response.json().then(function (listOfEvents) {
 	          var cleanData = listOfEvents.events.event;
 	          var door = [];
 	          for (var i = 0; i < cleanData.length; i++) {
-	            // console.log(cleanData[i])
 	            var event = cleanData[i];
-	            var cityName = event.city_name;
-	            var countryName = event.country_name;
-	            var showId = event.id;
-	            // let showImage = event.image.medium.url;
+	            var city_name = event.city_name;
+	            var country_name = event.country_name;
+	            var show_id = event.id;
+	            // let show_image = event.image.medium.url;
 	            // let performerName = event.performers.performer.name;
 	            // let genre = event.performers.performer.short_bio;
 	            var region = event.region_name;
-	            var dateAndTime = (0, _dateformat2.default)((new Date(), event.start_time.substring(0, 11))).substring(0, 11);
+	            var date_time = (0, _dateformat2.default)((new Date(), event.start_time.substring(0, 11))).substring(0, 11);
 	            var title = event.title;
-	            var eventURL = event.url;
-	            var venueAddress = event.venue_address;
-	            var venueName = event.venue_name;
+	            var event_url = event.url;
+	            var venue_address = event.venue_address;
+	            var venue_name = event.venue_name;
 	            // door.push(event);
 	            door.push({
-	              cityName: cityName,
-	              countryName: countryName,
-	              showId: showId,
-	              // showImage,
+	              city_name: city_name,
+	              country_name: country_name,
+	              show_id: show_id,
+	              // show_image,
 	              // performerName,
 	              // genre,
 	              region: region,
-	              dateAndTime: dateAndTime,
+	              date_time: date_time,
 	              title: title,
-	              eventURL: eventURL,
-	              venueAddress: venueAddress,
-	              venueName: venueName
+	              event_url: event_url,
+	              venue_address: venue_address,
+	              venue_name: venue_name
 	            });
 	          }
 	          _this2.setState({
-	            events: door
+	            keywordEvents: door
 	          });
-	          // console.log(this.state.event)
 	        });
 	      });
 	    }
@@ -23209,13 +24061,10 @@
 	    key: 'handleChange',
 	    value: function handleChange(e) {
 	      e.preventDefault();
-	      var target = e.target.value;
-	      var newTarget = target.split(' ').join('%20');
-	      console.log(newTarget);
+	      var target = e.target;
 	      this.setState({
-	        keyword: newTarget
+	        keyword: target.value
 	      });
-	      this.getEvents();
 	    }
 	  }, {
 	    key: 'handleSubmit',
@@ -23232,11 +24081,6 @@
 	    value: function openKeywordModal() {
 	      this.setState({ keywordModalOpen: true });
 	    }
-	
-	    // afterOpenKeywordModal() {
-	    //   this.refs.subtitle.style.color = '#f00';
-	    // }
-	
 	  }, {
 	    key: 'closeKeywordModal',
 	    value: function closeKeywordModal() {
@@ -23245,20 +24089,20 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var value = this.state.events.map(function (door) {
-	        return _react2.default.createElement(_EventView2.default, {
-	          cityName: door.cityName,
-	          countryName: door.countryName,
-	          showId: door.showId
-	          // showImage={door.showImage}
+	      var value = this.state.keywordEvents.map(function (door, idx) {
+	        return _react2.default.createElement(_EventView2.default, { key: idx,
+	          city_name: door.city_name,
+	          country_name: door.country_name,
+	          show_id: door.show_id
+	          // show_image={door.show_image}
 	          // performerName={door.performerName}
 	          // genre={door.genre}
 	          , region: door.region,
-	          dateAndTime: door.dateAndTime,
+	          date_time: door.date_time,
 	          title: door.title,
-	          eventURL: door.eventURL,
-	          venueAddress: door.venueAddress,
-	          venueName: door.venueName
+	          event_url: door.event_url,
+	          venue_address: door.venue_address,
+	          venue_name: door.venue_name
 	        });
 	      });
 	
@@ -23267,16 +24111,19 @@
 	        null,
 	        _react2.default.createElement(
 	          'form',
-	          { id: 'keyword-search-form', onSubmit: this.handleSubmit },
-	          _react2.default.createElement('input', { type: 'text',
+	          { className: 'keyword-search-form', onSubmit: this.handleSubmit },
+	          _react2.default.createElement('input', { className: 'search-input',
+	            type: 'text',
 	            name: 'keyword',
-	            placeholder: 'search by keyword',
-	            defaultValue: this.state.keyword,
-	            onBlur: this.handleChange
+	            placeholder: 'search by artist or band',
+	            value: this.state.keyword,
+	            onChange: this.handleChange
 	          }),
-	          _react2.default.createElement('input', { type: 'submit',
+	          _react2.default.createElement('input', { className: 'search-buttons',
+	            type: 'submit',
 	            onClick: this.handleSubmit,
-	            value: 'search'
+	            value: 'search',
+	            disabled: this.state.invalidData
 	          })
 	        ),
 	        _react2.default.createElement(
@@ -23288,11 +24135,20 @@
 	            onRequestClose: this.closeKeywordModal
 	          },
 	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.closeKeywordModal },
-	            'X'
+	            'div',
+	            { className: 'spotify-search' },
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: this.closeKeywordModal },
+	              'X'
+	            ),
+	            _react2.default.createElement(_Spotify2.default, null)
 	          ),
-	          value
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'event-list' },
+	            value
+	          )
 	        )
 	      );
 	    }
@@ -23302,6 +24158,62 @@
 	}(_react2.default.Component);
 	
 	exports.default = EventFinderByKeywords;
+	
+	// handleChange (e) {
+	//   e.preventDefault();
+	//   const target = e.target.value;
+	//   const newTarget = target.split(' ').join('%20');
+	//   console.log(newTarget);
+	//   this.setState({
+	//     keyword: newTarget,
+	//   });
+	// }
+	
+	// getEvents() {
+	//   const eventList = [];
+	//   fetch(`/api/keyword-events/${this.state.keyword}`)
+	//          .then((response) => {
+	//             response.json().then((listOfEvents) => {
+	//             let cleanData = listOfEvents.events.event;
+	//             let door = [];
+	//             for(let i = 0; i < cleanData.length; i++) {
+	//               // console.log(cleanData[i])
+	//               let event = cleanData[i];
+	//               let city_name = event.city_name;
+	//               let country_name = event.country_name;
+	//               let show_id = event.id;
+	//               // let show_image = event.image.medium.url;
+	//               // let performerName = event.performers.performer.name;
+	//               // let genre = event.performers.performer.short_bio;
+	//               let region = event.region_name;
+	//               let date_time = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,11);
+	//               let title = event.title;
+	//               let event_url = event.url;
+	//               let venue_address = event.venue_address;
+	//               let venue_name = event.venue_name;
+	//               // door.push(event);
+	//               door.push({
+	//                 city_name,
+	//                 country_name,
+	//                 show_id,
+	//                 // show_image,
+	//                 // performerName,
+	//                 // genre,
+	//                 region,
+	//                 date_time,
+	//                 title,
+	//                 event_url,
+	//                 venue_address,
+	//                 venue_name,
+	//               });
+	//             }
+	//             this.setState({
+	//               keywordEvents: door,
+	//             });
+	//            });
+	//   });
+	// }
+	
 	
 	// render () {
 	//       const value = this.state.events.map((door) => {
@@ -23343,25 +24255,25 @@
 	//   }
 
 /***/ },
-/* 179 */
+/* 186 */
 /***/ function(module, exports, __webpack_require__) {
 
-	module.exports = __webpack_require__(180);
+	module.exports = __webpack_require__(187);
 	
 
 
 /***/ },
-/* 180 */
+/* 187 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(process) {var React = __webpack_require__(1);
 	var ReactDOM = __webpack_require__(34);
-	var ExecutionEnvironment = __webpack_require__(181);
-	var ModalPortal = React.createFactory(__webpack_require__(182));
-	var ariaAppHider = __webpack_require__(197);
-	var elementClass = __webpack_require__(198);
+	var ExecutionEnvironment = __webpack_require__(188);
+	var ModalPortal = React.createFactory(__webpack_require__(189));
+	var ariaAppHider = __webpack_require__(204);
+	var elementClass = __webpack_require__(205);
 	var renderSubtreeIntoContainer = __webpack_require__(34).unstable_renderSubtreeIntoContainer;
-	var Assign = __webpack_require__(186);
+	var Assign = __webpack_require__(193);
 	
 	var SafeHTMLElement = ExecutionEnvironment.canUseDOM ? window.HTMLElement : {};
 	var AppElement = ExecutionEnvironment.canUseDOM ? document.body : {appendChild: function() {}};
@@ -23472,7 +24384,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(3)))
 
 /***/ },
-/* 181 */
+/* 188 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -23517,14 +24429,14 @@
 
 
 /***/ },
-/* 182 */
+/* 189 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var React = __webpack_require__(1);
 	var div = React.DOM.div;
-	var focusManager = __webpack_require__(183);
-	var scopeTab = __webpack_require__(185);
-	var Assign = __webpack_require__(186);
+	var focusManager = __webpack_require__(190);
+	var scopeTab = __webpack_require__(192);
+	var Assign = __webpack_require__(193);
 	
 	// so that our CSS is statically analyzable
 	var CLASS_NAMES = {
@@ -23735,10 +24647,10 @@
 
 
 /***/ },
-/* 183 */
+/* 190 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(184);
+	var findTabbable = __webpack_require__(191);
 	var modalElement = null;
 	var focusLaterElement = null;
 	var needToFocus = false;
@@ -23809,7 +24721,7 @@
 
 
 /***/ },
-/* 184 */
+/* 191 */
 /***/ function(module, exports) {
 
 	/*!
@@ -23865,10 +24777,10 @@
 
 
 /***/ },
-/* 185 */
+/* 192 */
 /***/ function(module, exports, __webpack_require__) {
 
-	var findTabbable = __webpack_require__(184);
+	var findTabbable = __webpack_require__(191);
 	
 	module.exports = function(node, event) {
 	  var tabbable = findTabbable(node);
@@ -23890,7 +24802,7 @@
 
 
 /***/ },
-/* 186 */
+/* 193 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23901,9 +24813,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseAssign = __webpack_require__(187),
-	    createAssigner = __webpack_require__(193),
-	    keys = __webpack_require__(189);
+	var baseAssign = __webpack_require__(194),
+	    createAssigner = __webpack_require__(200),
+	    keys = __webpack_require__(196);
 	
 	/**
 	 * A specialized version of `_.assign` for customizing assigned values without
@@ -23976,7 +24888,7 @@
 
 
 /***/ },
-/* 187 */
+/* 194 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -23987,8 +24899,8 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var baseCopy = __webpack_require__(188),
-	    keys = __webpack_require__(189);
+	var baseCopy = __webpack_require__(195),
+	    keys = __webpack_require__(196);
 	
 	/**
 	 * The base implementation of `_.assign` without support for argument juggling,
@@ -24009,7 +24921,7 @@
 
 
 /***/ },
-/* 188 */
+/* 195 */
 /***/ function(module, exports) {
 
 	/**
@@ -24047,7 +24959,7 @@
 
 
 /***/ },
-/* 189 */
+/* 196 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24058,9 +24970,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var getNative = __webpack_require__(190),
-	    isArguments = __webpack_require__(191),
-	    isArray = __webpack_require__(192);
+	var getNative = __webpack_require__(197),
+	    isArguments = __webpack_require__(198),
+	    isArray = __webpack_require__(199);
 	
 	/** Used to detect unsigned integer values. */
 	var reIsUint = /^\d+$/;
@@ -24289,7 +25201,7 @@
 
 
 /***/ },
-/* 190 */
+/* 197 */
 /***/ function(module, exports) {
 
 	/**
@@ -24432,7 +25344,7 @@
 
 
 /***/ },
-/* 191 */
+/* 198 */
 /***/ function(module, exports) {
 
 	/**
@@ -24667,7 +25579,7 @@
 
 
 /***/ },
-/* 192 */
+/* 199 */
 /***/ function(module, exports) {
 
 	/**
@@ -24853,7 +25765,7 @@
 
 
 /***/ },
-/* 193 */
+/* 200 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/**
@@ -24864,9 +25776,9 @@
 	 * Copyright 2009-2015 Jeremy Ashkenas, DocumentCloud and Investigative Reporters & Editors
 	 * Available under MIT license <https://lodash.com/license>
 	 */
-	var bindCallback = __webpack_require__(194),
-	    isIterateeCall = __webpack_require__(195),
-	    restParam = __webpack_require__(196);
+	var bindCallback = __webpack_require__(201),
+	    isIterateeCall = __webpack_require__(202),
+	    restParam = __webpack_require__(203);
 	
 	/**
 	 * Creates a function that assigns properties of source object(s) to a given
@@ -24911,7 +25823,7 @@
 
 
 /***/ },
-/* 194 */
+/* 201 */
 /***/ function(module, exports) {
 
 	/**
@@ -24982,7 +25894,7 @@
 
 
 /***/ },
-/* 195 */
+/* 202 */
 /***/ function(module, exports) {
 
 	/**
@@ -25120,7 +26032,7 @@
 
 
 /***/ },
-/* 196 */
+/* 203 */
 /***/ function(module, exports) {
 
 	/**
@@ -25193,7 +26105,7 @@
 
 
 /***/ },
-/* 197 */
+/* 204 */
 /***/ function(module, exports) {
 
 	var _element = typeof document !== 'undefined' ? document.body : null;
@@ -25241,7 +26153,7 @@
 
 
 /***/ },
-/* 198 */
+/* 205 */
 /***/ function(module, exports) {
 
 	module.exports = function(opts) {
@@ -25306,7 +26218,7 @@
 
 
 /***/ },
-/* 199 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_RESULT__;/*
@@ -25538,7 +26450,7 @@
 
 
 /***/ },
-/* 200 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	"use strict";
@@ -25570,13 +26482,6 @@
 	    return _possibleConstructorReturn(this, (EventView.__proto__ || Object.getPrototypeOf(EventView)).call(this));
 	  }
 	
-	  // parseDateAndTime() {
-	  //   date = {this.props.dateAndTime};
-	  //   sub = date.substring(0, 11);
-	  //   remainder = date.substring(11);
-	  //   console.log(remainder);
-	  // }
-	
 	  _createClass(EventView, [{
 	    key: "render",
 	    value: function render() {
@@ -25591,27 +26496,27 @@
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.performerName
+	          this.props.performer_name
 	        ),
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.dateAndTime
+	          this.props.date_time
 	        ),
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.venueName
+	          this.props.venue_name
 	        ),
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.venueAddress
+	          this.props.venue_address
 	        ),
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.cityName
+	          this.props.city_name
 	        ),
 	        _react2.default.createElement(
 	          "p",
@@ -25621,24 +26526,14 @@
 	        _react2.default.createElement(
 	          "p",
 	          null,
-	          this.props.countryName
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.showImage
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.genre
+	          this.props.country_name
 	        ),
 	        _react2.default.createElement(
 	          "button",
 	          null,
 	          _react2.default.createElement(
 	            "a",
-	            { href: this.props.eventURL },
+	            { href: this.props.event_url },
 	            "More info"
 	          )
 	        )
@@ -25659,7 +26554,7 @@
 	// String remainder = s.substring(10);
 
 /***/ },
-/* 201 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -25678,17 +26573,271 @@
 	
 	var _superagent2 = _interopRequireDefault(_superagent);
 	
-	var _reactModal = __webpack_require__(179);
+	var _reactModal = __webpack_require__(186);
 	
 	var _reactModal2 = _interopRequireDefault(_reactModal);
 	
-	var _dateformat = __webpack_require__(199);
+	var _SpotifyTrackView = __webpack_require__(209);
+	
+	var _SpotifyTrackView2 = _interopRequireDefault(_SpotifyTrackView);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var Spotify = function (_React$Component) {
+	  _inherits(Spotify, _React$Component);
+	
+	  function Spotify() {
+	    _classCallCheck(this, Spotify);
+	
+	    var _this = _possibleConstructorReturn(this, (Spotify.__proto__ || Object.getPrototypeOf(Spotify)).call(this));
+	
+	    _this.state = {
+	      keyword: '',
+	      tracks: [],
+	      spotifyModalOpen: false,
+	      invalidData: true
+	    };
+	    _this.handleChange = _this.handleChange.bind(_this);
+	    _this.handleSubmit = _this.handleSubmit.bind(_this);
+	    _this.getTracks = _this.getTracks.bind(_this);
+	    _this.openSpotifyModal = _this.openSpotifyModal.bind(_this);
+	    _this.closeSpotifyModal = _this.closeSpotifyModal.bind(_this);
+	    return _this;
+	  }
+	
+	  _createClass(Spotify, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      nextState.invalidData = !nextState.keyword;
+	    }
+	  }, {
+	    key: 'cleanTrackData',
+	    value: function cleanTrackData(data) {
+	      var cleanTrackObject = {
+	        title: data.name,
+	        artist: data.artists[0].name,
+	        previewURL: data.preview_url
+	      };
+	      return cleanTrackObject;
+	    }
+	  }, {
+	    key: 'getTracks',
+	    value: function getTracks() {
+	      var _this2 = this;
+	
+	      var searchInput = this.state.keyword;
+	      var cleanSearchInput = searchInput.replace(' ', '%20');
+	      var trackList = [];
+	      var URL = 'https://api.spotify.com/v1/search?q=' + cleanSearchInput + '&type=track&limit=10';
+	      _superagent2.default.get(URL).then(function (response) {
+	        var returnedTracks = response.body.tracks.items;
+	        returnedTracks.forEach(function (track) {
+	          var cleanTrack = _this2.cleanTrackData(track);
+	          trackList.push(cleanTrack);
+	        });
+	        _this2.setState({
+	          tracks: trackList
+	        });
+	      });
+	    }
+	  }, {
+	    key: 'handleChange',
+	    value: function handleChange(e) {
+	      e.preventDefault();
+	      var target = e.target;
+	      this.setState({
+	        keyword: target.value
+	      });
+	    }
+	  }, {
+	    key: 'handleSubmit',
+	    value: function handleSubmit(e) {
+	      e.preventDefault();
+	      this.getTracks();
+	      this.openSpotifyModal();
+	      this.setState({
+	        keyword: ''
+	      });
+	    }
+	  }, {
+	    key: 'openSpotifyModal',
+	    value: function openSpotifyModal() {
+	      this.setState({ spotifyModalOpen: true });
+	    }
+	  }, {
+	    key: 'closeSpotifyModal',
+	    value: function closeSpotifyModal() {
+	      this.setState({ spotifyModalOpen: false });
+	    }
+	  }, {
+	    key: 'render',
+	    value: function render() {
+	      return _react2.default.createElement(
+	        'div',
+	        null,
+	        _react2.default.createElement(
+	          'form',
+	          { id: 'search-form', onSubmit: this.handleSubmit },
+	          _react2.default.createElement('input', { className: 'track-input',
+	            type: 'text',
+	            name: 'keyword',
+	            placeholder: 'don\'t know them? search for a song to preview here!',
+	            value: this.state.keyword,
+	            onChange: this.handleChange
+	          }),
+	          _react2.default.createElement('input', { id: 'spotify-search-button',
+	            type: 'submit',
+	            onClick: this.handleSubmit,
+	            value: 'search',
+	            disabled: this.state.invalidData
+	          })
+	        ),
+	        _react2.default.createElement(
+	          _reactModal2.default,
+	          {
+	            className: 'spotify-search-modal',
+	            isOpen: this.state.spotifyModalOpen,
+	            onRequestClose: this.closeSpotifyModal
+	          },
+	          _react2.default.createElement(
+	            'button',
+	            { onClick: this.closeSpotifyModal },
+	            'X'
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { id: 'song-list' },
+	            this.state.tracks.map(function (track) {
+	              return _react2.default.createElement(_SpotifyTrackView2.default, { trackData: track });
+	            })
+	          )
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return Spotify;
+	}(_react2.default.Component);
+	
+	exports.default = Spotify;
+
+/***/ },
+/* 209 */
+/***/ function(module, exports, __webpack_require__) {
+
+	"use strict";
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+	
+	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+	
+	function _possibleConstructorReturn(self, call) { if (!self) { throw new ReferenceError("this hasn't been initialised - super() hasn't been called"); } return call && (typeof call === "object" || typeof call === "function") ? call : self; }
+	
+	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
+	
+	var propTypes = {
+	  trackData: _react2.default.PropTypes.object
+	};
+	
+	var SpotifyTrackView = function (_React$Component) {
+	  _inherits(SpotifyTrackView, _React$Component);
+	
+	  function SpotifyTrackView() {
+	    _classCallCheck(this, SpotifyTrackView);
+	
+	    return _possibleConstructorReturn(this, (SpotifyTrackView.__proto__ || Object.getPrototypeOf(SpotifyTrackView)).apply(this, arguments));
+	  }
+	
+	  _createClass(SpotifyTrackView, [{
+	    key: "render",
+	    value: function render() {
+	      return _react2.default.createElement(
+	        "div",
+	        { id: "track-element" },
+	        _react2.default.createElement(
+	          "ul",
+	          null,
+	          _react2.default.createElement(
+	            "li",
+	            { id: "artist-name" },
+	            this.props.trackData.artist
+	          ),
+	          _react2.default.createElement(
+	            "li",
+	            { id: "song-title" },
+	            "\"",
+	            this.props.trackData.title,
+	            "\""
+	          )
+	        ),
+	        _react2.default.createElement(
+	          "audio",
+	          { className: "audio", controls: true },
+	          _react2.default.createElement("source", { src: this.props.trackData.previewURL, type: "audio/mpeg" })
+	        )
+	      );
+	    }
+	  }]);
+	
+	  return SpotifyTrackView;
+	}(_react2.default.Component);
+	
+	exports.default = SpotifyTrackView;
+	
+	
+	SpotifyTrackView.propTypes = propTypes;
+
+/***/ },
+/* 210 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+	
+	Object.defineProperty(exports, "__esModule", {
+	  value: true
+	});
+	
+	var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+	
+	var _react = __webpack_require__(1);
+	
+	var _react2 = _interopRequireDefault(_react);
+	
+	var _superagent = __webpack_require__(173);
+	
+	var _superagent2 = _interopRequireDefault(_superagent);
+	
+	var _reactModal = __webpack_require__(186);
+	
+	var _reactModal2 = _interopRequireDefault(_reactModal);
+	
+	var _dateformat = __webpack_require__(206);
 	
 	var _dateformat2 = _interopRequireDefault(_dateformat);
 	
-	var _EventView = __webpack_require__(200);
+	var _EventView = __webpack_require__(207);
 	
 	var _EventView2 = _interopRequireDefault(_EventView);
+	
+	var _Spotify = __webpack_require__(208);
+	
+	var _Spotify2 = _interopRequireDefault(_Spotify);
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
@@ -25709,66 +26858,68 @@
 	    _this.state = {
 	      location: '',
 	      locationEvents: [],
-	      locationModalOpen: false
+	      locationModalOpen: false,
+	      invalidData: true
 	    };
 	    _this.getEventsByLocation = _this.getEventsByLocation.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    _this.handleChange = _this.handleChange.bind(_this);
 	    _this.openLocationModal = _this.openLocationModal.bind(_this);
 	    _this.closeLocationModal = _this.closeLocationModal.bind(_this);
-	    // this.afterOpenKeywordModal = this.afterOpenKeywordModal.bind(this);
 	    return _this;
 	  }
 	
 	  _createClass(EventFinderByLocation, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      nextState.invalidData = !nextState.location;
+	    }
+	  }, {
 	    key: 'getEventsByLocation',
 	    value: function getEventsByLocation() {
 	      var _this2 = this;
 	
-	      fetch('/api/events/searchby/' + this.state.location).then(function (response) {
+	      var searchInput = this.state.location;
+	      var cleanSearchInput = searchInput.replace(' ', '%20');
+	      fetch('/api/location-events/' + cleanSearchInput).then(function (response) {
 	        response.json().then(function (listOfEvents) {
 	          var cleanData = listOfEvents.events.event;
 	          var door = [];
 	          for (var i = 0; i < cleanData.length; i++) {
 	            // console.log(cleanData[i])
 	            var event = cleanData[i];
-	            var cityName = event.city_name;
-	            var countryName = event.country_name;
-	            var showId = event.id;
-	            var showImage = event.image_url;
+	            var city_name = event.city_name;
+	            var country_name = event.country_name;
+	            var show_id = event.id;
+	            // let show_image = event.image.medium.url;
 	            // let performerName = event.performers.performer.name;
 	            // let genre = event.performers.performer.short_bio;
 	            var region = event.region_name;
-	            var dateAndTime = (0, _dateformat2.default)((new Date(), event.start_time.substring(0, 11))).substring(0, 11);
-	            console.log(dateAndTime);
+	            var date_time = (0, _dateformat2.default)((new Date(), event.start_time.substring(0, 11))).substring(0, 11);
+	
 	            var title = event.title;
-	            var eventURL = event.url;
-	            var venueAddress = event.venue_address;
-	            var venueName = event.venue_name;
+	            var event_url = event.url;
+	            var venue_address = event.venue_address;
+	            var venue_name = event.venue_name;
 	            // door.push(event);
 	            door.push({
-	              cityName: cityName,
-	              countryName: countryName,
-	              showId: showId,
-	              showImage: showImage,
+	              city_name: city_name,
+	              country_name: country_name,
+	              show_id: show_id,
+	              // show_image,
 	              // performerName,
 	              // genre,
 	              region: region,
-	              dateAndTime: dateAndTime,
+	              date_time: date_time,
 	              title: title,
-	              eventURL: eventURL,
-	              venueAddress: venueAddress,
-	              venueName: venueName
+	              event_url: event_url,
+	              venue_address: venue_address,
+	              venue_name: venue_name
 	            });
 	          }
 	          _this2.setState({
 	            locationEvents: door
 	          });
-	
-	          // Turn your strings into dates, and then subtract them
-	          // to get a value that is either negative, positive, or zero.
-	
-	          // console.log(this.state.event)
 	        });
 	      });
 	    }
@@ -25776,13 +26927,10 @@
 	    key: 'handleChange',
 	    value: function handleChange(e) {
 	      e.preventDefault();
-	      var target = e.target.value;
-	      var newTarget = target.split(' ').join('%20');
-	      console.log(newTarget);
+	      var target = e.target;
 	      this.setState({
-	        location: newTarget
+	        location: target.value
 	      });
-	      this.getEventsByLocation();
 	    }
 	  }, {
 	    key: 'handleSubmit',
@@ -25790,17 +26938,15 @@
 	      e.preventDefault();
 	      this.getEventsByLocation();
 	      this.openLocationModal();
+	      this.setState({
+	        location: ''
+	      });
 	    }
 	  }, {
 	    key: 'openLocationModal',
 	    value: function openLocationModal() {
 	      this.setState({ locationModalOpen: true });
 	    }
-	
-	    // afterOpenKeywordModal() {
-	    //   this.refs.subtitle.style.color = '#f00';
-	    // }
-	
 	  }, {
 	    key: 'closeLocationModal',
 	    value: function closeLocationModal() {
@@ -25809,38 +26955,40 @@
 	  }, {
 	    key: 'render',
 	    value: function render() {
-	      var value = this.state.locationEvents.map(function (door) {
-	        return _react2.default.createElement(_EventView2.default, {
-	          cityName: door.cityName,
-	          countryName: door.countryName,
-	          showId: door.showId,
-	          showImage: door.showImage
+	      var value = this.state.locationEvents.map(function (door, idx) {
+	        return _react2.default.createElement(_EventView2.default, { key: idx,
+	          city_name: door.city_name,
+	          country_name: door.country_name,
+	          show_id: door.show_id
+	          // show_image={door.show_image}
 	          // performerName={door.performerName}
 	          // genre={door.genre}
 	          , region: door.region,
-	          dateAndTime: door.dateAndTime,
+	          date_time: door.date_time,
 	          title: door.title,
-	          eventURL: door.eventURL,
-	          venueAddress: door.venueAddress,
-	          venueName: door.venueName
+	          event_url: door.event_url,
+	          venue_address: door.venue_address,
+	          venue_name: door.venue_name
 	        });
 	      });
-	
 	      return _react2.default.createElement(
 	        'div',
 	        null,
 	        _react2.default.createElement(
 	          'form',
-	          { id: 'location-search-form', onSubmit: this.handleSubmit },
-	          _react2.default.createElement('input', { type: 'text',
+	          { className: 'location-search-form', onSubmit: this.handleSubmit },
+	          _react2.default.createElement('input', { className: 'search-input',
+	            type: 'text',
 	            name: 'location',
 	            placeholder: 'search by location',
-	            defaultValue: this.state.location,
-	            onBlur: this.handleChange
+	            value: this.state.location,
+	            onChange: this.handleChange
 	          }),
-	          _react2.default.createElement('input', { type: 'submit',
+	          _react2.default.createElement('input', { className: 'search-buttons',
+	            type: 'submit',
 	            onClick: this.handleSubmit,
-	            value: 'search'
+	            value: 'search',
+	            disabled: this.state.invalidData
 	          })
 	        ),
 	        _react2.default.createElement(
@@ -25853,7 +27001,17 @@
 	          },
 	          _react2.default.createElement(
 	            'div',
-	            { id: 'keyword-search' },
+	            { className: 'spotify-search' },
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: this.closeLocationModal },
+	              'X'
+	            ),
+	            _react2.default.createElement(_Spotify2.default, null)
+	          ),
+	          _react2.default.createElement(
+	            'ul',
+	            { className: 'event-list' },
 	            value
 	          )
 	        )
