@@ -1,3 +1,7 @@
+require('dotenv').config();
+
+process.env.ENV = process.env.ENV || 'dev';
+
 if (!process.env.AUTH_TOKEN) {
     require('dotenv').config();
 }
@@ -9,29 +13,47 @@ if (!process.env.APP_KEY) {
 const path = require('path');
 const app = require('./app/app');
 const express = require('express');
-
 const webpack = require('webpack');
-const webpackDevMiddleware = require('webpack-dev-middleware');
+const webpackMiddleware = require('webpack-dev-middleware');
 const webpackHotMiddleware = require('webpack-hot-middleware');
 const config = require('./webpack.config');
 
-const compiler = webpack(config);
-const webpackMiddle = webpackDevMiddleware(compiler, {
-  publicPath: '/js',
-  stats: {
-    chunks: false,
-    colors: true,
-  },
-});
+if (process.env.ENV === 'dev') {
+  const compiler = webpack(config);
+  const middleware = webpackMiddleware(compiler, {
+    stats: {
+      colors: true,
+      chunks: false,
+    },
+  });
 
-app.use(webpackMiddle);
-app.use(webpackHotMiddleware(compiler));
+  app.use(middleware);
+  app.use(webpackHotMiddleware(compiler));
+}
 
-app.use(express.static(path.join(__dirname, 'dist')));
+// const compiler = webpack(config);
+// const webpackMiddle = webpackMiddleware(compiler, {
+//   publicPath: '/js',
+//   stats: {
+//     chunks: false,
+//     colors: true,
+//   },
+// });
+
+// app.use(webpackMiddle);
+// app.use(webpackHotMiddleware(compiler));
+
+app.use(express.static(path.join(__dirname, '/dist')));
 app.get('/', (request, response) => {
-  response.sendFile(path.join(__dirname, 'index.html'));
+  response.sendFile(path.join(__dirname, 'dist/index.html'));
 });
 
-app.listen(3000, () => {
-  console.log(`Listening on Port 3000`);
+const port = process.env.PORT;
+app.listen(port, () => {
+  console.log(`Listening on Port ${port}`);
 });
+
+
+
+
+
