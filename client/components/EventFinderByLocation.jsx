@@ -13,16 +13,23 @@ class EventFinderByLocation extends React.Component {
       location: '',
       locationEvents: [],
       locationModalOpen: false,
+      invalidData: true,
     };
     this.getEventsByLocation = this.getEventsByLocation.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleChange = this.handleChange.bind(this);
     this.openLocationModal = this.openLocationModal.bind(this);
     this.closeLocationModal = this.closeLocationModal.bind(this);
-    // this.afterOpenKeywordModal = this.afterOpenKeywordModal.bind(this);
   }
+
+  componentWillUpdate(nextProps, nextState) {
+    nextState.invalidData = !nextState.location;
+  }
+
   getEventsByLocation() {
-    fetch(`/api/events/searchby/${this.state.location}`)
+    const searchInput = this.state.location;
+    const cleanSearchInput = searchInput.replace(' ', '%20');
+    fetch(`/api/location-events/${cleanSearchInput}`)
            .then((response) => {
               response.json().then((listOfEvents) => {
               let cleanData = listOfEvents.events.event;
@@ -30,33 +37,33 @@ class EventFinderByLocation extends React.Component {
               for(let i = 0; i < cleanData.length; i++) {
                 // console.log(cleanData[i])
                 let event = cleanData[i];
-                let cityName = event.city_name;
-                let countryName = event.country_name;
-                let showId = event.id;
-                // let showImage = event.image_url;
+                let city_name = event.city_name;
+                let country_name = event.country_name;
+                let show_id = event.id;
+                // let show_image = event.image.medium.url;
                 // let performerName = event.performers.performer.name;
                 // let genre = event.performers.performer.short_bio;
                 let region = event.region_name;
-                let dateAndTime = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,11);
-                console.log(dateAndTime);
+                let date_time = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,11);
+
                 let title = event.title;
-                let eventURL = event.url;
-                let venueAddress = event.venue_address;
-                let venueName = event.venue_name;
+                let event_url = event.url;
+                let venue_address = event.venue_address;
+                let venue_name = event.venue_name;
                 // door.push(event);
                 door.push({
-                  cityName,
-                  countryName,
-                  showId,
-                  // showImage,
+                  city_name,
+                  country_name,
+                  show_id,
+                  // show_image,
                   // performerName,
                   // genre,
                   region,
-                  dateAndTime,
+                  date_time,
                   title,
-                  eventURL,
-                  venueAddress,
-                  venueName,
+                  event_url,
+                  venue_address,
+                  venue_name,
                 });
               }
               this.setState({
@@ -68,19 +75,19 @@ class EventFinderByLocation extends React.Component {
 
   handleChange (e) {
     e.preventDefault();
-    const target = e.target.value;
-    const newTarget = target.split(' ').join('%20');
-    console.log(newTarget);
+    const target = e.target;
     this.setState({
-      location: newTarget,
+      location: target.value,
     });
-    // this.getEventsByLocation();
   }
 
   handleSubmit (e) {
     e.preventDefault();
     this.getEventsByLocation();
     this.openLocationModal();
+    this.setState({
+      location: ''
+    });
   }
 
   openLocationModal() {
@@ -95,34 +102,36 @@ class EventFinderByLocation extends React.Component {
       const value = this.state.locationEvents.map((door, idx) => {
         return(
           <EventView key={idx}
-            cityName={door.cityName}
-            countryName={door.countryName}
-            showId={door.showId}
-            // showImage={door.showImage}
+            city_name={door.city_name}
+            country_name={door.country_name}
+            show_id={door.show_id}
+            // show_image={door.show_image}
             // performerName={door.performerName}
             // genre={door.genre}
             region={door.region}
-            dateAndTime={door.dateAndTime}
+            date_time={door.date_time}
             title={door.title}
-            eventURL={door.eventURL}
-            venueAddress={door.venueAddress}
-            venueName={door.venueName}
+            event_url={door.event_url}
+            venue_address={door.venue_address}
+            venue_name={door.venue_name}
           />
         );
       });
     return (
       <div>
         <form className="location-search-form" onSubmit={this.handleSubmit}>
-          <input type="text"
+          <input className="search-input"
+                 type="text"
                  name="location"
                  placeholder="search by location"
-                 defaultValue={this.state.location}
-                 onBlur={this.handleChange}
+                 value={this.state.location}
+                 onChange={this.handleChange}
           />
-          <button className="search-buttons"
+          <input className="search-buttons"
                  type="submit"
                  onClick={this.handleSubmit}
                  value="search"
+                 disabled={this.state.invalidData}
           />
         </form>
         <Modal
@@ -131,11 +140,13 @@ class EventFinderByLocation extends React.Component {
           onAfterOpen={this.afterOpenLocationModal}
           onRequestClose={this.closeLocationModal}
         >
-          <button onClick={this.closeLocationModal}>X</button>
-          <Spotify />
-          <div id="location-search">
-            {value}
+          <div className="spotify-search">
+            <button onClick={this.closeLocationModal}>X</button>
+            <Spotify />
           </div>
+          <ul className="event-list">
+            {value}
+          </ul>
 
         </Modal>
       </div>

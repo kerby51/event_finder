@@ -7,28 +7,18 @@ class EventView extends React.Component {
     super();
   }
 
-  // parseDateAndTime() {
-  //   date = {this.props.dateAndTime};
-  //   sub = date.substring(0, 11);
-  //   remainder = date.substring(11);
-  //   console.log(remainder);
-  // }
-
   render() {
     return (
       <div id="event-view">
       <p>{this.props.title}</p>
-      <p>{this.props.performerName}</p>
-      <p>{this.props.dateAndTime}</p>
-      <p>{this.props.venueName}</p>
-      <p>{this.props.venueAddress}</p>
-      <p>{this.props.cityName}</p>
+      <p>{this.props.performer_name}</p>
+      <p>{this.props.date_time}</p>
+      <p>{this.props.venue_name}</p>
+      <p>{this.props.venue_address}</p>
+      <p>{this.props.city_name}</p>
       <p>{this.props.region}</p>
-      <p>{this.props.countryName}</p>
-
-      <p>{this.props.showImage}</p>
-      <p>{this.props.genre}</p>
-      <button><a href={this.props.eventURL}>More info</a></button>
+      <p>{this.props.country_name}</p>
+      <button><a href={this.props.event_url}>More info</a></button>
       </div>
     )
   }
