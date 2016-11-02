@@ -1,7 +1,7 @@
 import React from 'react';
 import request from 'superagent';
 import Modal from 'react-modal';
-import SpotifyTracks from './SpotifyTracks.jsx';
+import SpotifyTrackView from './SpotifyTrackView.jsx';
 
 export default class Spotify extends React.Component {
   constructor () {
@@ -10,12 +10,17 @@ export default class Spotify extends React.Component {
       keyword: '',
       tracks: [],
       spotifyModalOpen: false,
+      invalidData: true,
     }
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.getTracks = this.getTracks.bind(this);
     this.openSpotifyModal = this.openSpotifyModal.bind(this);
     this.closeSpotifyModal = this.closeSpotifyModal.bind(this);
+  }
+
+  componentWillUpdate(nextProps, nextState) {
+    nextState.invalidData = !nextState.keyword;
   }
 
   cleanTrackData (data) {
@@ -26,22 +31,6 @@ export default class Spotify extends React.Component {
     };
     return cleanTrackObject;
   }
-
-  // getTracks () {
-  //   const searchInput = this.state.keyword;
-  //   const trackList = this.state.tracks;
-  //   const baseURL = `https://api.spotify.com/v1/search?q=${searchInput}&type=track&limit=10`;
-  //   request.get(baseURL).then((response) => {
-  //     const returnedTracks = response.body.tracks.items;
-  //     returnedTracks.forEach((track) => {
-  //       const cleanTrack = this.cleanTrackData(track);
-  //       trackList.push(cleanTrack);
-  //       this.setState({
-  //         tracks: trackList,
-  //       });
-  //     });
-  //   });
-  // }
 
   getTracks() {
     const searchInput = this.state.keyword;
@@ -72,6 +61,9 @@ export default class Spotify extends React.Component {
     e.preventDefault();
     this.getTracks();
     this.openSpotifyModal();
+    this.setState({
+      keyword: '',
+    });
   }
 
   openSpotifyModal() {
@@ -97,6 +89,7 @@ export default class Spotify extends React.Component {
                  type="submit"
                  onClick={this.handleSubmit}
                  value="search"
+                 disabled={this.state.invalidData}
           />
         </form>
         <Modal
@@ -106,11 +99,11 @@ export default class Spotify extends React.Component {
         >
           <button onClick={this.closeSpotifyModal}>X</button>
 
-          <ul>
+          <ul id="song-list">
             {this.state.tracks.map((track) => {
               return (
 
-                <SpotifyTracks trackData={track} />
+                <SpotifyTrackView trackData={track} />
 
               );
             })}
