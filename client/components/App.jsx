@@ -1,10 +1,13 @@
 import React from 'react';
 import request from 'superagent';
 import cookie from 'react-cookie';
+import { Link } from 'react-router';
 import UserForm from './users/UserForm.jsx';
 import Login from './users/Login.jsx';
-import EventFinderByKeywords from './EventFinderByKeywords.jsx';
-import EventFinderByLocation from './EventFinderByLocation.jsx';
+import EventFinderByKeywords from './events/EventFinderByKeywords.jsx';
+import EventFinderByLocation from './events/EventFinderByLocation.jsx';
+import EventView from './events/EventView.jsx';
+import MyEvents from './events/MyEvents.jsx';
 
 class App extends React.Component {
   constructor(props) {
@@ -15,34 +18,26 @@ class App extends React.Component {
     this.logIn = this.logIn.bind(this);
     this.signUp = this.signUp.bind(this);
     this.signOut = this.signOut.bind(this);
-    // this.sendEvent = this.sendEvent.bind(this);
+    this.getCurrentUserEvents = this.getCurrentUserEvents.bind(this);
   }
 
   componentDidMount() {
     this.updateAuth();
-    // if (cookie.load('token')) {
-    //   console.log('hello');
-    // }
+    if (cookie.load('token')) {
+      this.getCurrentUserEvents();
+    }
   }
 
-  // getCurrentUserEvents() {
-  //   request.get('/api/events')
-  //          .then((response) => {
-  //            const events = response.body;
-  //            this.setState({ events });
-  //          })
-  //          .catch(() => {
-  //            this.updateAuth();
-  //          });
-  // }
-
-  // sendEvent({ title, kajsdf, akjdsf, kjad, kjasdf, kajdsf }) {
-  //   request.post('/api/events')
-  //          .send({ title, date, name, etc. etc,  })
-  //          .then(() => {
-  //            this.getCurrentUserEvents();
-  //          });
-  // }
+  getCurrentUserEvents() {
+    request.get('/api/events')
+           .then((response) => {
+             const events = response.body;
+             this.setState({ events });
+           })
+           .catch(() => {
+             this.updateAuth();
+           });
+  }
 
   signOut() {
     request.post('/api/signout')
@@ -55,10 +50,10 @@ class App extends React.Component {
   }
   logIn(userDetails) {
     request.post('/api/login')
-          .send(userDetails)
-         .then(() => {
+           .send(userDetails)
+           .then(() => {
            this.updateAuth();
-           // this.getCurrentUserEvents();
+           this.getCurrentUserEvents();
          });
   }
   signUp(userDetails) {
@@ -66,17 +61,17 @@ class App extends React.Component {
           .send(userDetails)
           .then(() => {
             this.updateAuth();
-            // this.getCurrentUserEvents();
+            this.getCurrentUserEvents();
           });
   }
 
   render () {
     let userDisplayElement;
+    let eventDisplayElement;
     if (this.state.token) {
       userDisplayElement = (
         <div>
           <button onClick={this.signOut}>Log-Out!</button>
-
 
         </div>
       );
@@ -89,25 +84,41 @@ class App extends React.Component {
         </div>
       );
     }
+    if (this.state.token) {
+      eventDisplayElement = (
+        <div>
+          <MyEvents events={this.state.events} />
+        </div>
+      );
+    }
         return(
           <div>
             {userDisplayElement}
-          <div id="search-bars">
-            <div id="keyword-search-bar">
-              <EventFinderByKeywords />
+            <div id="search-bars">
+              <div id="keyword-search-bar">
+                <EventFinderByKeywords />
+              </div>
+              <div>
+               <h3> -OR- </h3>
+              </div>
+              <div id="location-search-bar">
+                <EventFinderByLocation />
+              </div>
             </div>
             <div>
-              <h3> -OR- </h3>
+              {eventDisplayElement}
             </div>
-            <div id="location-search-bar">
-              <EventFinderByLocation />
-            </div>
-          </div>
           </div>
         )
   }
 }
 
 export default App;
+
+// <Link id="myEvents" to="/events">My Events</Link>
+
+ // <div>
+ //              {eventDisplayElement}
+ //            </div>
 
 
