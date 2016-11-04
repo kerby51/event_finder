@@ -6,8 +6,8 @@ class EventLocation {
   constructor() {
 
   }
-  getEventsByLocation(location) {
-    this.apiURL = `http://api.eventful.com/json/events/search?c=music&page_size=45&location=${location}&app_key=${process.env.APP_KEY}`;
+  getEventsByLocation(location, when) {
+    this.apiURL = `http://api.eventful.com/json/events/search?c=music&page_size=45&when=${when}&location=${location}&app_key=${process.env.APP_KEY}`;
     // console.log(this.apiURL);
     return request.get(this.apiURL)
                        .then((eventResponseLocation) => {
