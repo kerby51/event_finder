@@ -7,11 +7,6 @@ body {
   -webkit-background-size: cover;
 }
 
-input {
-  width: 300px;
-  height: 40px;
-}
-
 .login {
   text-decoration: none;
   color: white;
@@ -68,27 +63,27 @@ input {
 #search-bars {
   background-color: white;
   border: 1px solid magenta;
-  height: 130px;
-  width: 70%;
-  margin-top: 255px;
-  margin-left: 175px;
+  height: 260px;
+  width: 65%;
+  margin-top: 190px;
+  margin-left: 215px;
   text-align: center;
   position: absolute;
-  display: inline-block;
+  /*display: block;*/
 }
 
 h3 {
   display: inline-block;
   position: relative;
-  top: 35px;
-  right: 206px;
+  top: 10px;
+  right: 0px;
 }
 
 .keyword-search-form {
-  float: left;
-  margin-left: 250px;
+  /*float: left;*/
+  margin-right: 110px;
   margin-top: 40px;
-  display: block;
+  display: inline-block;
    margin-left: 100px;
   position: relative;
 }
@@ -100,10 +95,10 @@ h3 {
 
 .location-search-form {
   float: right;
-  margin-top: -20px;
-  display: block;
-  margin-right: 100px;
-  position: relative;
+  margin-top: 10px;
+  display: inline-block;
+  margin-right: 60px;
+  /*position: relative;*/
 }
 
 #search-form {
@@ -112,8 +107,15 @@ h3 {
 
 .search-input {
   text-align: center;
-  font-size: 1rem;
+  font-size: 0.96rem;
+  width: 360px;
 }
+
+input {
+  width: 300px;
+  height: 40px;
+}
+
 
 .event-list {
   margin: 0 auto;
@@ -131,7 +133,7 @@ h3 {
 .keyword-search-modal {
   width: 50%;
   height: 87%;
-  margin-left: 75px;
+  margin-left: 155px;
   margin-top: 80px;
   background-color: white;
   display: inline-block;
@@ -143,12 +145,14 @@ h3 {
   overflow-x: hidden;
   overflow-y: auto;
   position: absolute;
-  margin-left: 650px;
+  margin-left: 730px;
   margin-top: 80px;
-  background-color: black;
+  background-color: darkgray;
+  border: 1px solid magenta;
   font-size: 1rem;
   /*text-align: center;*/
   color: white;
+  padding: 0;
 }
 
 .track-input {
@@ -158,11 +162,14 @@ h3 {
   /*position: fixed;*/
 }
 
+#artist-title-list {
+  text-align: center;
+  margin-right: 60px;
+  padding-bottom: 5px;
+}
+
 .search-buttons {
-   width: 50px;
-   height: 50px;
-   display: block;
-   margin-left: 120px;
+   display: none;
 }
 
 #spotify-search-button {
@@ -174,4 +181,18 @@ ul {
   list-style: none;
 }
 
+#my-events {
+  background-color: white;
+  margin-top: 500px;
+  border: 1px solid black;
+  padding: 0;
+  width: 100%;
+}
 
+#event-list {
+  padding: 0;
+}
+
+#one-event {
+  padding-bottom: 15px;
+}
