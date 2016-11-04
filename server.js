@@ -40,8 +40,6 @@ if (process.env.ENV === 'dev') {
 //   },
 // });
 
-// app.use(webpackMiddle);
-// app.use(webpackHotMiddleware(compiler));
 
 app.use(express.static(path.join(__dirname, '/dist')));
 app.get('/', (request, response) => {
