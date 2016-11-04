@@ -9,8 +9,17 @@ CREATE TABLE users (
   password VARCHAR NOT NULL
 );
 
--- CREATE TABLE events (
---   id SERIAL PRIMARY KEY,
---   body VARCHAR NOT NULL,
---   user_id INTEGER REFERENCES users (id)
--- );
+CREATE TABLE events (
+  id SERIAL PRIMARY KEY,
+  title TEXT,
+  date_time VARCHAR,
+  venue_name TEXT,
+  venue_address TEXT,
+  city_name VARCHAR,
+  region VARCHAR,
+  country_name VARCHAR,
+  event_url TEXT,
+  user_id INTEGER REFERENCES users (id)
+);
+
+
