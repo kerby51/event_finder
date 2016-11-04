@@ -13,12 +13,12 @@ const sqlProvider = {
     create: sql('./sql/user/create.sql'),
     delete: sql('./sql/user/delete.sql'),
   },
-  // events: {
-  //   all: sql('./sql/event/all.sql'),
-  //   create: sql('./sql/event/create.sql'),
-  //   delete: sql('./sql/event/delete.sql'),
-  //   find: sql('./sql/event/find.sql'),
-  // },
+  events: {
+    all: sql('./sql/event/all.sql'),
+    create: sql('./sql/event/create.sql'),
+    delete: sql('./sql/event/delete.sql'),
+    find: sql('./sql/event/find.sql'),
+  },
 };
 
 module.exports = sqlProvider;
