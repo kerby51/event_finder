@@ -10,6 +10,10 @@ if (!process.env.APP_KEY) {
     require('dotenv').config();
 }
 
+if (!process.env.PORT) {
+  require('dotenv').config();
+}
+
 const path = require('path');
 const app = require('./app/app');
 const express = require('express');
