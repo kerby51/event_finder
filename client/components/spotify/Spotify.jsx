@@ -97,8 +97,10 @@ export default class Spotify extends React.Component {
               isOpen={this.state.spotifyModalOpen}
               onRequestClose={this.closeSpotifyModal}
         >
-          <button onClick={this.closeSpotifyModal}>X</button>
 
+          <div id="spotify-close">
+            <button onClick={this.closeSpotifyModal}>X</button>
+          </div>
           <ul id="song-list">
             {this.state.tracks.map((track) => {
               return (
@@ -108,6 +110,7 @@ export default class Spotify extends React.Component {
               );
             })}
           </ul>
+
         </Modal>
       </div>
     );
