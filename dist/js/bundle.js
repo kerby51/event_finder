@@ -62,6 +62,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
+	// import Home from './components/Home.jsx';
 	// import MyEvents from './components/events/MyEvents.jsx';
 	
 	_reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.querySelector('#root'));
@@ -69,7 +70,9 @@
 	// ReactDOM.render((
 	//   <Router history={hashHistory} >
 	//     <Route path="/" component={App} >
-	//       <Route path="events" component={MyEvents} />
+	//       <IndexRoute component={Home} >
+	//         <Route path="events" component={MyEvents}  />
+	//       </IndexRoute>
 	//     </Route>
 	//   </Router>
 	//   ), document.querySelector('#root'));
@@ -26421,6 +26424,7 @@
 	    _this.signUp = _this.signUp.bind(_this);
 	    _this.signOut = _this.signOut.bind(_this);
 	    _this.getCurrentUserEvents = _this.getCurrentUserEvents.bind(_this);
+	    // this.deleteEvent = this.deleteEvent.bind(this);
 	    return _this;
 	  }
 	
@@ -26444,6 +26448,15 @@
 	        _this2.updateAuth();
 	      });
 	    }
+	
+	    // deleteEvent(id) {
+	    //   request.del(`/api/events/${id}`)
+	    //          .then(() => {
+	    //            this.getCurrentUserEvents();
+	    //          })
+	    //          console.log('oh hi')
+	    // }
+	
 	  }, {
 	    key: 'signOut',
 	    value: function signOut() {
@@ -26493,7 +26506,8 @@
 	            'button',
 	            { onClick: this.signOut },
 	            'Log-Out!'
-	          )
+	          ),
+	          _react2.default.createElement('div', { id: 'blank-div' })
 	        );
 	      } else {
 	        userDisplayElement = _react2.default.createElement(
@@ -26510,7 +26524,7 @@
 	        eventDisplayElement = _react2.default.createElement(
 	          'div',
 	          null,
-	          _react2.default.createElement(_MyEvents2.default, { events: this.state.events })
+	          _react2.default.createElement(_MyEvents2.default, { events: this.state.events, deleteEvent: this.deleteEvent })
 	        );
 	      }
 	      return _react2.default.createElement(
@@ -26518,26 +26532,51 @@
 	        null,
 	        userDisplayElement,
 	        _react2.default.createElement(
+	          'header',
+	          null,
+	          _react2.default.createElement(
+	            'h1',
+	            { id: 'title' },
+	            'Live',
+	            _react2.default.createElement(
+	              'span',
+	              null,
+	              '4'
+	            ),
+	            'Live'
+	          ),
+	          _react2.default.createElement(
+	            'h2',
+	            { id: 'sub-title' },
+	            'Discover music events happening near you'
+	          ),
+	          _react2.default.createElement(
+	            'p',
+	            { id: 'directions' },
+	            'Sign-in to start tracking your events, or simply start searching!'
+	          )
+	        ),
+	        _react2.default.createElement(
 	          'div',
 	          { id: 'search-bars' },
 	          _react2.default.createElement(
 	            'div',
-	            { id: 'keyword-search-bar' },
-	            _react2.default.createElement(_EventFinderByKeywords2.default, null)
+	            { id: 'location-search-bar' },
+	            _react2.default.createElement(_EventFinderByLocation2.default, { token: this.state.token, getCurrentUserEvents: this.getCurrentUserEvents })
 	          ),
 	          _react2.default.createElement(
 	            'div',
 	            null,
 	            _react2.default.createElement(
 	              'h3',
-	              null,
+	              { id: 'or' },
 	              ' -OR- '
 	            )
 	          ),
 	          _react2.default.createElement(
 	            'div',
-	            { id: 'location-search-bar' },
-	            _react2.default.createElement(_EventFinderByLocation2.default, null)
+	            { id: 'keyword-search-bar' },
+	            _react2.default.createElement(_EventFinderByKeywords2.default, { token: this.state.token, getCurrentUserEvents: this.getCurrentUserEvents })
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -26559,6 +26598,26 @@
 	// <div>
 	//              {eventDisplayElement}
 	//            </div>
+	
+	
+	// <div id="search-bars">
+	//              <div id="keyword-search-bar">
+	//                <EventFinderByKeywords />
+	//              </div>
+	//              <div>
+	//               <h3> -OR- </h3>
+	//              </div>
+	//              <div id="location-search-bar">
+	//                <EventFinderByLocation />
+	//              </div>
+	//            </div>
+	
+	
+	// {this.state.myEventsView ?
+	//             <MyEvents
+	//                     myEvents = {this.state.myEventsView}
+	//                     events = {this.state.events}
+	//             /> : <Home />}
 
 /***/ },
 /* 228 */
@@ -28502,18 +28561,20 @@
 	
 	    _this.state = {
 	      email: '',
-	      password: ''
+	      password: '',
+	      invalidData: true
 	    };
 	    _this.handleInputChange = _this.handleInputChange.bind(_this);
 	    _this.handleSubmit = _this.handleSubmit.bind(_this);
 	    return _this;
 	  }
 	
-	  // componentWillUpdate(nextProps, nextState) {
-	  //   nextState.invalidData = !(nextState.email && nextState.password);
-	  // }
-	
 	  _createClass(UserForm, [{
+	    key: 'componentWillUpdate',
+	    value: function componentWillUpdate(nextProps, nextState) {
+	      nextState.invalidData = !(nextState.email && nextState.password);
+	    }
+	  }, {
 	    key: 'handleInputChange',
 	    value: function handleInputChange(e) {
 	      var target = e.target;
@@ -28564,7 +28625,7 @@
 	            placeholder: 'password',
 	            onChange: this.handleInputChange
 	          }),
-	          _react2.default.createElement('input', { onClick: this.handleSubmit, className: 'sign-in-buttons', value: this.props.buttonText })
+	          _react2.default.createElement('input', { type: 'submit', onClick: this.handleSubmit, disabled: this.state.invalidData, className: 'sign-in-buttons', value: this.props.buttonText })
 	        )
 	      );
 	    }
@@ -28739,7 +28800,7 @@
 	        'div',
 	        { className: 'register-link' },
 	        _react2.default.createElement(
-	          'button',
+	          'h4',
 	          {
 	            className: 'register',
 	            onClick: this.props.openModal
@@ -28968,13 +29029,11 @@
 	            // let genre = event.performers.performer.short_bio;
 	            var region = event.region_name;
 	            // let date_time = (event.start_time).substring(0,11);
-	
 	            var date_time = (0, _dateformat2.default)((new Date(), event.start_time.substring(0, 11))).substring(0, 16);
 	            var title = event.title;
 	            var event_url = event.url;
 	            var venue_address = event.venue_address;
 	            var venue_name = event.venue_name;
-	            // door.push(event);
 	            door.push({
 	              city_name: city_name,
 	              country_name: country_name,
@@ -29000,10 +29059,12 @@
 	    value: function sendEvent(title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id) {
 	      var body = [];
 	      body.push({ title: title, date_time: date_time, venue_name: venue_name, venue_address: venue_address, city_name: city_name, region: region, country_name: country_name, event_url: event_url, user_id: user_id });
-	      // console.log(title)
 	      _superagent2.default.post('/api/events').send(body).then(function () {
 	        console.log('hello!');
 	      });
+	      {
+	        this.props.getCurrentUserEvents(this.state);
+	      }
 	    }
 	  }, {
 	    key: 'handleChange',
@@ -29042,19 +29103,16 @@
 	      var value = this.state.keywordEvents.map(function (door, idx) {
 	        return _react2.default.createElement(_EventView2.default, { key: idx,
 	          city_name: door.city_name,
-	          country_name: door.country_name
-	          // show_image={door.show_image}
-	          // performerName={door.performerName}
-	          // genre={door.genre}
-	          , region: door.region,
+	          country_name: door.country_name,
+	          region: door.region,
 	          date_time: door.date_time,
 	          title: door.title,
 	          event_url: door.event_url,
 	          venue_address: door.venue_address,
 	          venue_name: door.venue_name,
 	          sendEvent: _this3.sendEvent,
-	          keywordModalOpen: _this3.state.keywordModalOpen
-	
+	          keywordModalOpen: _this3.state.keywordModalOpen,
+	          token: _this3.props.token
 	        });
 	      });
 	
@@ -31335,10 +31393,10 @@
 	var EventView = function (_React$Component) {
 	  _inherits(EventView, _React$Component);
 	
-	  function EventView() {
+	  function EventView(props) {
 	    _classCallCheck(this, EventView);
 	
-	    return _possibleConstructorReturn(this, (EventView.__proto__ || Object.getPrototypeOf(EventView)).call(this));
+	    return _possibleConstructorReturn(this, (EventView.__proto__ || Object.getPrototypeOf(EventView)).call(this, props));
 	  }
 	
 	  _createClass(EventView, [{
@@ -31346,66 +31404,116 @@
 	    value: function render() {
 	      var _this2 = this;
 	
-	      // console.log(this.props.title)
+	      var eventListDisplay = void 0;
+	      if (this.props.token) {
+	        eventListDisplay = _react2.default.createElement(
+	          "div",
+	          { className: "event-view" },
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-title" },
+	            this.props.title
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-date" },
+	            this.props.date_time
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-venue" },
+	            this.props.venue_name
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-address" },
+	            this.props.venue_address
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-city" },
+	            this.props.city_name,
+	            ", ",
+	            this.props.region
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-country" },
+	            this.props.country_name
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            { className: "more-info" },
+	            _react2.default.createElement(
+	              "a",
+	              { className: "more-info-link", href: this.props.event_url },
+	              "More info"
+	            )
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            { id: "add-button",
+	              type: "submit",
+	              onClick: this.props.keywordModalOpen ? function () {
+	                _this2.props.sendEvent(_this2.props.title, _this2.props.date_time, _this2.props.venue_name, _this2.props.venue_address, _this2.props.city_name, _this2.props.region, _this2.props.country_name, _this2.props.event_url, _this2.user_id);
+	              } : function () {
+	                _this2.props.sendLocationEvent(_this2.props.title, _this2.props.date_time, _this2.props.venue_name, _this2.props.venue_address, _this2.props.city_name, _this2.props.region, _this2.props.country_name, _this2.props.event_url, _this2.user_id);
+	              }
+	            },
+	            "Add Event"
+	          )
+	        );
+	      } else {
+	        eventListDisplay = _react2.default.createElement(
+	          "div",
+	          { className: "event-view" },
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-title" },
+	            this.props.title
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-date" },
+	            this.props.date_time
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-venue" },
+	            this.props.venue_name
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-address" },
+	            this.props.venue_address
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-city" },
+	            this.props.city_name,
+	            ", ",
+	            this.props.region
+	          ),
+	          _react2.default.createElement(
+	            "p",
+	            { className: "event-view-country" },
+	            this.props.country_name
+	          ),
+	          _react2.default.createElement(
+	            "button",
+	            { className: "more-info" },
+	            _react2.default.createElement(
+	              "a",
+	              { className: "more-info-link", href: this.props.event_url },
+	              "More info"
+	            )
+	          )
+	        );
+	      }
 	      return _react2.default.createElement(
 	        "div",
-	        { id: "event-view" },
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.title
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.date_time
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.venue_name
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.venue_address
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.city_name
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.region
-	        ),
-	        _react2.default.createElement(
-	          "p",
-	          null,
-	          this.props.country_name
-	        ),
-	        _react2.default.createElement(
-	          "button",
-	          null,
-	          _react2.default.createElement(
-	            "a",
-	            { href: this.props.event_url },
-	            "More info"
-	          )
-	        ),
-	        _react2.default.createElement(
-	          "button",
-	          { id: "add-button",
-	            type: "submit",
-	            onClick: this.props.keywordModalOpen ? function () {
-	              _this2.props.sendEvent(_this2.props.title, _this2.props.date_time, _this2.props.venue_name, _this2.props.venue_address, _this2.props.city_name, _this2.props.region, _this2.props.country_name, _this2.props.event_url, _this2.user_id);
-	            } : function () {
-	              _this2.props.sendLocationEvent(_this2.props.title, _this2.props.date_time, _this2.props.venue_name, _this2.props.venue_address, _this2.props.city_name, _this2.props.region, _this2.props.country_name, _this2.props.event_url, _this2.user_id);
-	            }
-	          },
-	          "Add Event"
-	        )
+	        null,
+	        eventListDisplay
 	      );
 	    }
 	  }]);
@@ -31594,9 +31702,13 @@
 	            onRequestClose: this.closeSpotifyModal
 	          },
 	          _react2.default.createElement(
-	            'button',
-	            { onClick: this.closeSpotifyModal },
-	            'X'
+	            'div',
+	            { id: 'spotify-close' },
+	            _react2.default.createElement(
+	              'button',
+	              { onClick: this.closeSpotifyModal },
+	              'X'
+	            )
 	          ),
 	          _react2.default.createElement(
 	            'ul',
@@ -31808,14 +31920,10 @@
 	            var event_url = event.url;
 	            var venue_address = event.venue_address;
 	            var venue_name = event.venue_name;
-	            // door.push(event);
 	            door.push({
 	              city_name: city_name,
 	              country_name: country_name,
 	              show_id: show_id,
-	              // show_image,
-	              // performerName,
-	              // genre,
 	              region: region,
 	              date_time: date_time,
 	              title: title,
@@ -31835,15 +31943,17 @@
 	    value: function sendLocationEvent(title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id) {
 	      var body = [];
 	      body.push({ title: title, date_time: date_time, venue_name: venue_name, venue_address: venue_address, city_name: city_name, region: region, country_name: country_name, event_url: event_url, user_id: user_id });
-	      // console.log(title)
 	      _superagent2.default.post('/api/events').send(body).then(function () {
 	        console.log('hello!');
 	      });
+	      {
+	        this.props.getCurrentUserEvents(this.state);
+	      }
 	    }
 	  }, {
 	    key: 'handleLocationChange',
 	    value: function handleLocationChange(e) {
-	      // e.preventDefault();
+	      e.preventDefault();
 	      var target = e.target;
 	      this.setState({
 	        location: target.value
@@ -31891,17 +32001,15 @@
 	        return _react2.default.createElement(_EventView2.default, { key: idx,
 	          city_name: door.city_name,
 	          country_name: door.country_name,
-	          show_id: door.show_id
-	          // show_image={door.show_image}
-	          // performerName={door.performerName}
-	          // genre={door.genre}
-	          , region: door.region,
+	          show_id: door.show_id,
+	          region: door.region,
 	          date_time: door.date_time,
 	          title: door.title,
 	          event_url: door.event_url,
 	          venue_address: door.venue_address,
 	          venue_name: door.venue_name,
-	          sendLocationEvent: _this3.sendLocationEvent
+	          sendLocationEvent: _this3.sendLocationEvent,
+	          token: _this3.props.token
 	
 	        });
 	      });
@@ -31965,14 +32073,6 @@
 	}(_react2.default.Component);
 	
 	exports.default = EventFinderByLocation;
-	
-	// <input className="search-input"
-	//               type="text"
-	//               name="when"
-	//               placeholder="search by month"
-	//               value={this.state.when}
-	//               onChange={this.handleWhenChange}
-	//        />
 
 /***/ },
 /* 266 */
@@ -31998,8 +32098,6 @@
 	
 	function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 	
-	// import DonationForm from './DonationForm.jsx';
-	
 	var propTypes = {
 	  events: _react2.default.PropTypes.array
 	};
@@ -32007,11 +32105,17 @@
 	var MyEvents = function (_React$Component) {
 	  _inherits(MyEvents, _React$Component);
 	
-	  function MyEvents() {
+	  function MyEvents(props) {
 	    _classCallCheck(this, MyEvents);
 	
-	    return _possibleConstructorReturn(this, (MyEvents.__proto__ || Object.getPrototypeOf(MyEvents)).apply(this, arguments));
+	    return _possibleConstructorReturn(this, (MyEvents.__proto__ || Object.getPrototypeOf(MyEvents)).call(this, props));
+	    // this.handleDelete = this.handleDelete.bind(this);
 	  }
+	
+	  // handleDelete() {
+	  //   this.props.deleteEvent(this.props.id);
+	  //   console.log('yessss!')
+	  // }
 	
 	  _createClass(MyEvents, [{
 	    key: "render",
@@ -32022,7 +32126,7 @@
 	          { id: "one-event", key: idx },
 	          _react2.default.createElement(
 	            "p",
-	            null,
+	            { id: "event-list-title" },
 	            event.title
 	          ),
 	          _react2.default.createElement(
@@ -32038,17 +32142,18 @@
 	          _react2.default.createElement(
 	            "p",
 	            null,
-	            event.city_name
-	          ),
-	          _react2.default.createElement(
-	            "p",
-	            null,
+	            event.city_name,
+	            ", ",
 	            event.region
 	          ),
 	          _react2.default.createElement(
-	            "a",
-	            { href: event.event_url },
-	            "More info"
+	            "button",
+	            { className: "more-info-list" },
+	            _react2.default.createElement(
+	              "a",
+	              { className: "more-info-link", href: event.event_url },
+	              "More info"
+	            )
 	          )
 	        );
 	      });
@@ -32056,9 +32161,9 @@
 	        "div",
 	        { id: "my-events" },
 	        _react2.default.createElement(
-	          "h3",
-	          null,
-	          "my events"
+	          "h1",
+	          { id: "my-events-header" },
+	          "My Events"
 	        ),
 	        _react2.default.createElement(
 	          "ul",
@@ -32075,6 +32180,9 @@
 	MyEvents.propTypes = propTypes;
 	
 	exports.default = MyEvents;
+	
+	// <button className="delete-button" onClick={this.props.deleteEvent(this.props.id)}>X</button>
+	// <button className="delete-button" onClick={this.handleDelete}>X</button>
 
 /***/ }
 /******/ ]);
