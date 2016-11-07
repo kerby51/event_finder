@@ -57,14 +57,10 @@ class EventFinderByLocation extends React.Component {
                 let event_url = event.url;
                 let venue_address = event.venue_address;
                 let venue_name = event.venue_name;
-                // door.push(event);
                 door.push({
                   city_name,
                   country_name,
                   show_id,
-                  // show_image,
-                  // performerName,
-                  // genre,
                   region,
                   date_time,
                   title,
@@ -83,16 +79,16 @@ class EventFinderByLocation extends React.Component {
   sendLocationEvent( title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id ) {
     let body = [];
     body.push({ title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id })
-    // console.log(title)
     request.post('/api/events')
            .send( body )
            .then(() => {
              console.log('hello!')
            });
+          {this.props.getCurrentUserEvents(this.state)}
   }
 
   handleLocationChange (e) {
-    // e.preventDefault();
+    e.preventDefault();
     const target = e.target;
     this.setState({
       location: target.value,
@@ -136,9 +132,6 @@ class EventFinderByLocation extends React.Component {
             city_name={door.city_name}
             country_name={door.country_name}
             show_id={door.show_id}
-            // show_image={door.show_image}
-            // performerName={door.performerName}
-            // genre={door.genre}
             region={door.region}
             date_time={door.date_time}
             title={door.title}
@@ -146,6 +139,7 @@ class EventFinderByLocation extends React.Component {
             venue_address={door.venue_address}
             venue_name={door.venue_name}
             sendLocationEvent={this.sendLocationEvent}
+            token={this.props.token}
 
           />
         );
@@ -201,10 +195,3 @@ export default EventFinderByLocation;
 
 
 
-   // <input className="search-input"
-   //               type="text"
-   //               name="when"
-   //               placeholder="search by month"
-   //               value={this.state.when}
-   //               onChange={this.handleWhenChange}
-   //        />

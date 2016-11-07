@@ -2,22 +2,22 @@ import React from 'react';
 
 
 class EventView extends React.Component {
-  constructor() {
-    super();
+  constructor(props) {
+    super(props);
   }
 
   render() {
-    // console.log(this.props.title)
-    return (
-      <div id="event-view">
-        <p>{this.props.title}</p>
-        <p>{this.props.date_time}</p>
-        <p>{this.props.venue_name}</p>
-        <p>{this.props.venue_address}</p>
-        <p>{this.props.city_name}</p>
-        <p>{this.props.region}</p>
-        <p>{this.props.country_name}</p>
-        <button><a href={this.props.event_url}>More info</a></button>
+    let eventListDisplay;
+    if(this.props.token) {
+      eventListDisplay = (
+        <div className="event-view">
+        <p className="event-view-title">{this.props.title}</p>
+        <p className="event-view-date">{this.props.date_time}</p>
+        <p className="event-view-venue">{this.props.venue_name}</p>
+        <p className="event-view-address">{this.props.venue_address}</p>
+        <p className="event-view-city">{this.props.city_name}, {this.props.region}</p>
+        <p className="event-view-country">{this.props.country_name}</p>
+        <button className="more-info"><a className="more-info-link" href={this.props.event_url}>More info</a></button>
         <button id="add-button"
               type="submit"
               onClick={ this.props.keywordModalOpen ?
@@ -48,14 +48,30 @@ class EventView extends React.Component {
                   )
               }}
               >Add Event</button>
-
+      </div>
+      );
+    } else {
+      eventListDisplay = (
+        <div className="event-view">
+          <p className="event-view-title">{this.props.title}</p>
+          <p className="event-view-date">{this.props.date_time}</p>
+          <p className="event-view-venue">{this.props.venue_name}</p>
+          <p className="event-view-address">{this.props.venue_address}</p>
+          <p className="event-view-city">{this.props.city_name}, {this.props.region}</p>
+          <p className="event-view-country">{this.props.country_name}</p>
+          <button className="more-info"><a className="more-info-link" href={this.props.event_url}>More info</a></button>
+      </div>
+      );
+    }
+    return (
+      <div>
+        {eventListDisplay}
       </div>
     )
   }
 }
 
 export default EventView;
-
 
 
 // <button id="add-button"

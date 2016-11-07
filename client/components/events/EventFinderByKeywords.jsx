@@ -44,13 +44,11 @@ class EventFinderByKeywords extends React.Component {
                 // let genre = event.performers.performer.short_bio;
                 let region = event.region_name;
                 // let date_time = (event.start_time).substring(0,11);
-
                 let date_time = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,16);
                 let title = event.title;
                 let event_url = event.url;
                 let venue_address = event.venue_address;
                 let venue_name = event.venue_name;
-                // door.push(event);
                 door.push({
                   city_name,
                   country_name,
@@ -75,12 +73,12 @@ class EventFinderByKeywords extends React.Component {
   sendEvent( title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id ) {
     let body = [];
     body.push({ title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id })
-    // console.log(title)
     request.post('/api/events')
            .send( body )
            .then(() => {
              console.log('hello!')
            });
+           {this.props.getCurrentUserEvents(this.state)}
   }
 
   handleChange (e) {
@@ -114,9 +112,6 @@ class EventFinderByKeywords extends React.Component {
           <EventView key={idx}
             city_name={door.city_name}
             country_name={door.country_name}
-            // show_image={door.show_image}
-            // performerName={door.performerName}
-            // genre={door.genre}
             region={door.region}
             date_time={door.date_time}
             title={door.title}
@@ -125,7 +120,7 @@ class EventFinderByKeywords extends React.Component {
             venue_name={door.venue_name}
             sendEvent={this.sendEvent}
             keywordModalOpen={this.state.keywordModalOpen}
-
+            token={this.props.token}
           />
         );
       });
