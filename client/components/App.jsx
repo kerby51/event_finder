@@ -19,6 +19,7 @@ class App extends React.Component {
     this.signUp = this.signUp.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getCurrentUserEvents = this.getCurrentUserEvents.bind(this);
+    // this.deleteEvent = this.deleteEvent.bind(this);
   }
 
   componentDidMount() {
@@ -38,6 +39,14 @@ class App extends React.Component {
              this.updateAuth();
            });
   }
+
+  // deleteEvent(id) {
+  //   request.del(`/api/events/${id}`)
+  //          .then(() => {
+  //            this.getCurrentUserEvents();
+  //          })
+  //          console.log('oh hi')
+  // }
 
   signOut() {
     request.post('/api/signout')
@@ -72,7 +81,7 @@ class App extends React.Component {
       userDisplayElement = (
         <div>
           <button onClick={this.signOut}>Log-Out!</button>
-
+          <div id="blank-div"></div>
         </div>
       );
     } else {
@@ -87,22 +96,28 @@ class App extends React.Component {
     if (this.state.token) {
       eventDisplayElement = (
         <div>
-          <MyEvents events={this.state.events} />
+          <MyEvents events={this.state.events} deleteEvent={this.deleteEvent} />
         </div>
       );
     }
         return(
           <div>
             {userDisplayElement}
+            <header>
+              <h1 id="title">Live<span>4</span>Live</h1>
+              <h2 id="sub-title">Discover music events happening near you</h2>
+              <p id="directions">Sign-in to start tracking your events, or simply start searching!</p>
+            </header>
+
             <div id="search-bars">
-              <div id="keyword-search-bar">
-                <EventFinderByKeywords />
+               <div id="location-search-bar">
+                <EventFinderByLocation token={this.state.token} getCurrentUserEvents={this.getCurrentUserEvents} />
               </div>
               <div>
-               <h3> -OR- </h3>
+               <h3 id="or"> -OR- </h3>
               </div>
-              <div id="location-search-bar">
-                <EventFinderByLocation />
+               <div id="keyword-search-bar">
+                <EventFinderByKeywords token={this.state.token} getCurrentUserEvents={this.getCurrentUserEvents} />
               </div>
             </div>
             <div>
@@ -115,6 +130,7 @@ class App extends React.Component {
 
 export default App;
 
+
 // <Link id="myEvents" to="/events">My Events</Link>
 
  // <div>
@@ -122,3 +138,27 @@ export default App;
  //            </div>
 
 
+
+
+
+
+
+ // <div id="search-bars">
+ //              <div id="keyword-search-bar">
+ //                <EventFinderByKeywords />
+ //              </div>
+ //              <div>
+ //               <h3> -OR- </h3>
+ //              </div>
+ //              <div id="location-search-bar">
+ //                <EventFinderByLocation />
+ //              </div>
+ //            </div>
+
+
+
+  // {this.state.myEventsView ?
+  //             <MyEvents
+  //                     myEvents = {this.state.myEventsView}
+  //                     events = {this.state.events}
+  //             /> : <Home />}
