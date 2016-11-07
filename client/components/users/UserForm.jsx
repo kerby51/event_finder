@@ -13,15 +13,15 @@ class UserForm extends React.Component {
     this.state = {
       email: '',
       password: '',
-      // invalidData: true,
+      invalidData: true,
     };
     this.handleInputChange = this.handleInputChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
   }
 
-  // componentWillUpdate(nextProps, nextState) {
-  //   nextState.invalidData = !(nextState.email && nextState.password);
-  // }
+  componentWillUpdate(nextProps, nextState) {
+    nextState.invalidData = !(nextState.email && nextState.password);
+  }
 
   handleInputChange(e) {
     const target = e.target;
@@ -62,7 +62,7 @@ class UserForm extends React.Component {
             placeholder="password"
             onChange={this.handleInputChange}
           />
-          <input onClick={this.handleSubmit} className="sign-in-buttons" value={this.props.buttonText}  />
+          <input type="submit" onClick={this.handleSubmit} disabled={this.state.invalidData} className="sign-in-buttons" value={this.props.buttonText}  />
         </form>
       </div>
     );

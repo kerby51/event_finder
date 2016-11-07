@@ -9,12 +9,12 @@ class RegisterView extends React.Component {
   render() {
    return (
      <div className="register-link">
-       <button
+       <h4
          className="register"
          onClick={this.props.openModal}
        >
        Register
-       </button>
+       </h4>
      </div>
    );
  }
