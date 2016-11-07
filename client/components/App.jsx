@@ -133,30 +133,6 @@ export default App;
 
 // <Link id="myEvents" to="/events">My Events</Link>
 
- // <div>
- //              {eventDisplayElement}
- //            </div>
-
-
-
-
-
-
-
- // <div id="search-bars">
- //              <div id="keyword-search-bar">
- //                <EventFinderByKeywords />
- //              </div>
- //              <div>
- //               <h3> -OR- </h3>
- //              </div>
- //              <div id="location-search-bar">
- //                <EventFinderByLocation />
- //              </div>
- //            </div>
-
-
-
   // {this.state.myEventsView ?
   //             <MyEvents
   //                     myEvents = {this.state.myEventsView}

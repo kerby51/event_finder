@@ -62,20 +62,7 @@
 	
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 	
-	// import Home from './components/Home.jsx';
-	// import MyEvents from './components/events/MyEvents.jsx';
-	
 	_reactDom2.default.render(_react2.default.createElement(_App2.default, null), document.querySelector('#root'));
-	
-	// ReactDOM.render((
-	//   <Router history={hashHistory} >
-	//     <Route path="/" component={App} >
-	//       <IndexRoute component={Home} >
-	//         <Route path="events" component={MyEvents}  />
-	//       </IndexRoute>
-	//     </Route>
-	//   </Router>
-	//   ), document.querySelector('#root'));
 	
 	console.log('working');
 
@@ -26595,24 +26582,6 @@
 	
 	// <Link id="myEvents" to="/events">My Events</Link>
 	
-	// <div>
-	//              {eventDisplayElement}
-	//            </div>
-	
-	
-	// <div id="search-bars">
-	//              <div id="keyword-search-bar">
-	//                <EventFinderByKeywords />
-	//              </div>
-	//              <div>
-	//               <h3> -OR- </h3>
-	//              </div>
-	//              <div id="location-search-bar">
-	//                <EventFinderByLocation />
-	//              </div>
-	//            </div>
-	
-	
 	// {this.state.myEventsView ?
 	//             <MyEvents
 	//                     myEvents = {this.state.myEventsView}
@@ -32163,7 +32132,7 @@
 	        _react2.default.createElement(
 	          "h1",
 	          { id: "my-events-header" },
-	          "My Events"
+	          "Saved Events"
 	        ),
 	        _react2.default.createElement(
 	          "ul",

@@ -31,7 +31,7 @@ class MyEvents extends React.Component {
     });
     return (
       <div id="my-events">
-        <h1 id="my-events-header">My Events</h1>
+        <h1 id="my-events-header">Saved Events</h1>
         <ul id="event-list">
           {eventElements.reverse()}
         </ul>
