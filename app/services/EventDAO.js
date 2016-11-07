@@ -27,18 +27,3 @@ class EventDAO {
 module.exports = EventDAO;
 
 
-
-
-  // static searchByKeyword(keyword) {
-  //   const URL = `http://api.eventful.com/json/events/search?c=music&page_size=25&keywords=${keyword}&app_key=${process.env.APP_KEY}`;
-  //   return request.get(URL).then((keywordResponse) => {
-  //     return keywordResponse.req.res.text;
-  //   })
-  // }
-
-  // static searchByLocation(location) {
-  //   const URL = `http://api.eventful.com/json/events/search?c=music&page_size=25&location=${location}&app_key=${process.env.APP_KEY}`;
-  //   return request.get(URL).then((locationResponse) => {
-  //     return locationResponse.req.res.text;
-  //   })
-  // }
