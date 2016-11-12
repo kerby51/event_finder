@@ -1,4 +1,4 @@
-const EventDAO = require('../services/eventDAO.js');
+const EventDAO = require('../services/EventDAO.js');
 
 class EventController {
 
