@@ -26540,7 +26540,7 @@
 	          _react2.default.createElement(
 	            'p',
 	            { id: 'directions' },
-	            'Sign-in to start tracking your events, or simply start searching!'
+	            'Sign-in to start tracking your events, or simply start searching, either by location and timeframe OR by artist!'
 	          )
 	        ),
 	        _react2.default.createElement(
@@ -29099,6 +29099,7 @@
 	            onChange: this.handleChange
 	          }),
 	          _react2.default.createElement('input', { className: 'search-buttons',
+	            id: 'keyword-search-button',
 	            type: 'submit',
 	            onClick: this.handleSubmit,
 	            value: 'search',
@@ -32007,6 +32008,7 @@
 	            type: 'submit',
 	            onClick: this.handleSubmit,
 	            value: 'search',
+	            placeholder: 'Search',
 	            disabled: this.state.invalidData
 	          })
 	        ),

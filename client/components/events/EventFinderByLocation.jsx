@@ -166,6 +166,7 @@ class EventFinderByLocation extends React.Component {
                  type="submit"
                  onClick={this.handleSubmit}
                  value="search"
+                 placeholder="Search"
                  disabled={this.state.invalidData}
           />
         </form>

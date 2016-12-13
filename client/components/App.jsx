@@ -106,7 +106,7 @@ class App extends React.Component {
             <header>
               <h1 id="title">Live<span>4</span>Live</h1>
               <h2 id="sub-title">Discover music events happening near you</h2>
-              <p id="directions">Sign-in to start tracking your events, or simply start searching!</p>
+              <p id="directions">Sign-in to start tracking your events, or simply start searching, either by location and timeframe OR by artist!</p>
             </header>
 
             <div id="search-bars">

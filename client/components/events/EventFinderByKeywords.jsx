@@ -136,6 +136,7 @@ class EventFinderByKeywords extends React.Component {
                  onChange={this.handleChange}
           />
           <input className="search-buttons"
+                 id="keyword-search-button"
                  type="submit"
                  onClick={this.handleSubmit}
                  value="search"
