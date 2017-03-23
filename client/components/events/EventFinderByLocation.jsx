@@ -34,7 +34,6 @@ class EventFinderByLocation extends React.Component {
     const whenInput = this.state.when;
     const cleanSearchInput = searchInput.replace(' ', '%20');
     const cleanWhenInput = whenInput.replace(' ', '%20');
-    // console.log(cleanSearchInput)
     fetch(`/api/location-events/${cleanSearchInput}/${cleanWhenInput}`)
            .then((response) => {
               response.json().then((listOfEvents) => {
@@ -42,17 +41,12 @@ class EventFinderByLocation extends React.Component {
               let cleanData = listOfEvents.events.event;
               let door = [];
               for(let i = 0; i < cleanData.length; i++) {
-                // console.log(cleanData[i])
                 let event = cleanData[i];
                 let city_name = event.city_name;
                 let country_name = event.country_name;
                 let show_id = event.id;
-                // let show_image = event.image.medium.url;
-                // let performerName = event.performers.performer.name;
-                // let genre = event.performers.performer.short_bio;
                 let region = event.region_name;
                 let date_time = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,16);
-
                 let title = event.title;
                 let event_url = event.url;
                 let venue_address = event.venue_address;
@@ -101,7 +95,6 @@ class EventFinderByLocation extends React.Component {
     this.setState({
       when: target.value,
     });
-    // console.log(this.state);
   }
 
   handleSubmit (e) {

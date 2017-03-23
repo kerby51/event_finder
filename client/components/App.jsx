@@ -19,7 +19,6 @@ class App extends React.Component {
     this.signUp = this.signUp.bind(this);
     this.signOut = this.signOut.bind(this);
     this.getCurrentUserEvents = this.getCurrentUserEvents.bind(this);
-    // this.deleteEvent = this.deleteEvent.bind(this);
   }
 
   componentDidMount() {
@@ -39,14 +38,6 @@ class App extends React.Component {
              this.updateAuth();
            });
   }
-
-  // deleteEvent(id) {
-  //   request.del(`/api/events/${id}`)
-  //          .then(() => {
-  //            this.getCurrentUserEvents();
-  //          })
-  //          console.log('oh hi')
-  // }
 
   signOut() {
     request.post('/api/signout')
@@ -131,10 +122,4 @@ class App extends React.Component {
 export default App;
 
 
-// <Link id="myEvents" to="/events">My Events</Link>
 
-  // {this.state.myEventsView ?
-  //             <MyEvents
-  //                     myEvents = {this.state.myEventsView}
-  //                     events = {this.state.events}
-  //             /> : <Home />}

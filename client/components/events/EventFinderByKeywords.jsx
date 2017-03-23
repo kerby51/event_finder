@@ -39,11 +39,7 @@ class EventFinderByKeywords extends React.Component {
                 let event = cleanData[i];
                 let city_name = event.city_name;
                 let country_name = event.country_name;
-                // let show_image = event.image.medium.url;
-                // let performerName = event.performers.performer.name;
-                // let genre = event.performers.performer.short_bio;
                 let region = event.region_name;
-                // let date_time = (event.start_time).substring(0,11);
                 let date_time = dateFormat((new Date(), (event.start_time).substring(0, 11))).substring(0,16);
                 let title = event.title;
                 let event_url = event.url;
@@ -52,9 +48,6 @@ class EventFinderByKeywords extends React.Component {
                 door.push({
                   city_name,
                   country_name,
-                  // show_image,
-                  // performerName,
-                  // genre,
                   region,
                   date_time,
                   title,
@@ -165,7 +158,7 @@ class EventFinderByKeywords extends React.Component {
 export default EventFinderByKeywords;
 
 
-// ({ title, date_time, venue_name, venue_address, city_name, region, country_name, event_url, user_id })
+
 
 
 

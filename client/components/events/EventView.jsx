@@ -74,29 +74,5 @@ class EventView extends React.Component {
 export default EventView;
 
 
-// <button id="add-button"
-//               onClick={this.props.sendEvent(
-//                   this.props.title,
-//                   this.props.date_time,
-//                   this.props.venue_name,
-//                   this.props.venue_address,
-//                   this.props.city_name,
-//                   this.props.region,
-//                   this.props.country_name,
-//                   this.props.event_url, this.one)} >Add Event</button>
 
- // <button id="add-button"
- //              type="submit"
- //              onClick={() => {
- //                  this.props.sendEvent(
- //                    this.props.title,
- //                    this.props.date_time,
- //                    this.props.venue_name,
- //                    this.props.venue_address,
- //                    this.props.city_name,
- //                    this.props.region,
- //                    this.props.country_name,
- //                    this.props.event_url, this.user_id)
- //              }}
- //              >Add Event</button>
 
